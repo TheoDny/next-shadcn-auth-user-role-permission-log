@@ -1,0 +1,240 @@
+import { prisma } from "@/lib/prisma"
+import { includeUserFull, includeUserRole, UserFull, UserInfoFull, UserRole } from "@/type/user.type"
+import { PermissionSmall } from "@/type/permission.type"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { addLog } from "@/service/log.service"
+import jwt, { JwtPayload } from "jsonwebtoken"
+import { hash } from "bcryptjs"
+import { sendEmailNewUser } from "@/service/mail.service"
+import { idAdminAccount } from "@/../prisma/dataSeed"
+import { checkPermissions } from "@/util/auth.util"
+
+export const getUserFullInfoFromEmailOrId = async (
+    emailOrId: string,
+    from: "id" | "email" = "id",
+): Promise<UserInfoFull | null> => {
+    const where = from === "id" ? { id: emailOrId } : { email: emailOrId }
+
+    const userFull: UserFull | null = await prisma.user.findUnique({
+        where,
+        include: {
+            ...includeUserFull,
+            Roles: {
+                include: {
+                    Permissions: true,
+                },
+            },
+        },
+    })
+
+    if (!userFull) return null
+
+    const permissionsSet = new Set<PermissionSmall>()
+    userFull.Roles.forEach((role) => {
+        role.Permissions.forEach((permission) => {
+            permissionsSet.add(permission)
+        })
+        // @ts-ignore --- Clear Permissions to avoid unnecessary data transfer
+        delete role.Permissions
+    })
+
+    const permissions: PermissionSmall[] = Array.from(permissionsSet)
+
+    return { ...userFull, Permissions: permissions }
+}
+
+export const getAllUserRole = async (): Promise<UserRole[]> => {
+    return prisma.user.findMany({
+        include: includeUserRole,
+    })
+}
+
+export const setRoles = async (userId: string, roleIds: string[]): Promise<UserRole> => {
+    const session = await getServerSession(authOptions)
+    if (!session || !checkPermissions(session, ["gestion_user"])) {
+        throw new Error("Unauthorized")
+    }
+    if (userId === idAdminAccount) {
+        throw new Error("La réattribution des roles du compte Administrateur n'est autorisé")
+    }
+
+    const user = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            Roles: {
+                set: roleIds.map((roleId) => {
+                    return { id: roleId }
+                }),
+            },
+        },
+        include: includeUserRole,
+    })
+
+    addLog(
+        "USER_EDIT",
+        `Edition des roles de l'utilisateur ${user.lastname.toUpperCase()} ${user.firstname} (${user.id})`,
+    )
+
+    return user
+}
+
+export const disabledUser = async (userId: string) => {
+    const session = await getServerSession(authOptions)
+    if (!session || !checkPermissions(session, ["gestion_user"])) {
+        throw new Error("Unauthorized")
+    }
+    if (userId === idAdminAccount) {
+        throw new Error("La désactivation du compte Administrateur n'est autorisé")
+    }
+
+    const user = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            isActive: false,
+        },
+        include: includeUserRole,
+    })
+
+    addLog(
+        "USER_DEACTIVATE",
+        `Désactivation de l'utilisateur ${user.lastname.toUpperCase()} ${user.firstname} (${user.id})`,
+    )
+
+    return user
+}
+
+export const activeUser = async (userId: string) => {
+    const session = await getServerSession(authOptions)
+    if (!session || !checkPermissions(session, ["gestion_user"])) {
+        throw new Error("Unauthorized")
+    }
+
+    const user = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            isActive: true,
+        },
+        include: includeUserRole,
+    })
+
+    addLog(
+        "USER_ACTIVATE",
+        `Activation de l'utilisateur ${user.lastname.toUpperCase()} ${user.firstname} (${user.id})`,
+    )
+
+    return user
+}
+
+export const addUser = async (firstname: string, lastname: string, email: string): Promise<UserRole> => {
+    const session = await getServerSession(authOptions)
+    if (!session || !checkPermissions(session, ["gestion_role"])) {
+        throw new Error("Unauthorized")
+    }
+
+    const newUser = await prisma.user.create({
+        data: {
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+            password: "to_define_with_email_send",
+        },
+        include: includeUserRole,
+    })
+    try {
+        const resEmail = await sendEmailNewUser(newUser.email, newUser.id)
+        if (!resEmail) throw new Error("Sending email failed")
+    } catch (error) {
+        console.error("Error while sending email user", error)
+        await prisma.user.delete({
+            where: { id: newUser.id },
+        })
+        throw new Error("Error while sending email user")
+    }
+
+    addLog("USER_ADD", `Ajout de l'utilisateur ${newUser.lastname} ${newUser.firstname} (${newUser.id})`)
+
+    return newUser
+}
+
+export const editUser = async (
+    userId: string,
+    firstname: string,
+    lastname: string,
+    email: string,
+): Promise<UserRole> => {
+    const session = await getServerSession(authOptions)
+    if (!session || !checkPermissions(session, ["gestion_role"])) {
+        throw new Error("Unauthorized")
+    }
+    if (userId === idAdminAccount) {
+        throw new Error("L'édition du compte Administrateur n'est autorisé")
+    }
+
+    const editedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+        },
+        include: includeUserRole,
+    })
+
+    addLog(
+        "USER_EDIT",
+        `Edition de l'utilisateur ${editedUser.lastname.toUpperCase()} ${editedUser.firstname} (${editedUser.id})`,
+    )
+
+    return editedUser
+}
+
+export const resetPassword = async (token: string, newPassword: string) => {
+    const decodedToken: JwtPayload | string = jwt.verify(token, process.env.APP_SECRET ?? "secret")
+    if (!decodedToken || typeof decodedToken === "string" || !newPassword || !decodedToken.idUser) {
+        throw new Error("Token invalid")
+    }
+    const idUser = decodedToken.idUser as string
+    await prisma.user.update({
+        where: {
+            id: idUser,
+        },
+        data: {
+            password: await hash(newPassword, 12),
+        },
+    })
+
+    addLog("USER_CHANGE_PWD", "Changement de mot de passe", idUser)
+    return true
+}
+
+export const sendMailPasswordReset = async (userId?: string | null) => {
+    const session = await getServerSession(authOptions)
+    if (!session || (!checkPermissions(session, ["gestion_role"]) && Boolean(userId))) {
+        throw new Error("Unauthorized")
+    }
+    if (!userId) {
+        userId = session.user.id as string
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+    })
+    if (!user) {
+        throw new Error("User not found")
+    }
+
+    try {
+        const resEmail = await sendEmailNewUser(user.email, user.id)
+        if (!resEmail) {
+            throw new Error("failed to send email")
+        }
+        return resEmail
+    } catch (error) {
+        console.error("Error while sending email user", error)
+        await prisma.user.delete({
+            where: { id: user.id },
+        })
+        throw new Error("Error while sending email user")
+    }
+}
