@@ -1,7 +1,6 @@
 "use client"
 import {
     ColumnDef,
-    ColumnFiltersState,
     FilterFn,
     flexRender,
     getCoreRowModel,
@@ -12,7 +11,7 @@ import {
 } from "@tanstack/react-table"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableRowHead } from "@/component/ui/table"
-import { ChangeEvent, CSSProperties, ReactNode, useEffect, useState } from "react"
+import { ChangeEvent, ReactNode, useState } from "react"
 import { Input } from "@/component/ui/input"
 
 import { remove as removeDiacritics } from "diacritics"

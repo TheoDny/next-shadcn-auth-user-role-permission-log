@@ -2,7 +2,6 @@
 import dayjs from "dayjs"
 import { UserFormatted, UserRole } from "@/type/user.type"
 import DoubleDataTable, { ConfigCustomTable } from "@/component/dataTable/DoubleDataTable"
-import { Role } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/component/ui/checkbox"
 import { Button } from "@/component/ui/button"
@@ -12,7 +11,7 @@ import { DialogAddEditUser } from "@/component/dataTable/userManagement/dialog/D
 import { ReactNode, useState } from "react"
 import { setRolesAction } from "@/action/user.action"
 import { toast } from "sonner"
-import { RoleFormatted, RoleSmall } from "@/type/role.type"
+import { RoleSmall } from "@/type/role.type"
 
 type props = {
     usersData: UserRole[]
