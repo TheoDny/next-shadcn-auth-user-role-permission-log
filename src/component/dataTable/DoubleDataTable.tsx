@@ -15,14 +15,14 @@ type props<L, FL, R, FR> = {
     formatLeft: (data: L[]) => FL[]
     columnsLeft: ColumnDef<FL>[]
     configLeft?: ConfigCustomTable
-    styleLeft?: DataTableStyle
+    classNameLeft?: DataTableStyle
     toolbarLeft?: ReactNode
     keyLeftToRight: keyof L
     dataRight: R[]
     formatRight: (data: R[]) => FR[]
     columnsRight: ColumnDef<FR>[]
     configRight?: ConfigCustomTable
-    styleRight?: DataTableStyle
+    classNameRight?: DataTableStyle
     onDoubleClickLeft?: (index: number) => any
     onChangeSelectedRight?: (leftIndex: number, rightIds: string[]) => any
 }
@@ -37,14 +37,14 @@ export default function DoubleDataTable<
     formatLeft,
     columnsLeft,
     configLeft,
-    styleLeft,
+    classNameLeft,
     toolbarLeft,
     keyLeftToRight,
     dataRight,
     formatRight,
     columnsRight,
     configRight,
-    styleRight,
+    classNameRight,
     onDoubleClickLeft,
     onChangeSelectedRight,
 }: props<L, FL, R, FR>) {
@@ -103,7 +103,7 @@ export default function DoubleDataTable<
                         },
                         ...configLeft,
                     }}
-                    style={styleLeft}
+                    className={classNameLeft}
                     toolbar={toolbarLeft}
                     onDoubleClick={onDoubleClickLeft}
                 />
@@ -125,7 +125,7 @@ export default function DoubleDataTable<
                         },
                         ...configRight,
                     }}
-                    style={styleRight}
+                    className={classNameRight}
                 />
             </div>
         </div>

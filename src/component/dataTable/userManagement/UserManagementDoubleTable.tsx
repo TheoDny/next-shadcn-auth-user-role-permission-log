@@ -26,44 +26,14 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
     const configLeft: ConfigCustomTable = {
         filterPlaceHolder: "Filtre des users...",
     }
-    const styleLeft: DataTableStyle = {
-        div: {
-            style: {
-                height: "calc(100dvh - 150px)",
-            },
-        },
-        row: {
-            style: {
-                height: "40px",
-            },
-            className: "cursor-pointer",
-        },
-        rowHeader: {
-            style: {
-                height: "40px",
-            },
-        },
+    const classNameLeft: DataTableStyle = {
+        row: "cursor-pointer",
     }
     const configRight: ConfigCustomTable = {
         filterPlaceHolder: "Filtre des roles...",
     }
-    const styleRight: DataTableStyle = {
-        div: {
-            style: {
-                height: "calc(100dvh - 150px)",
-            },
-        },
-        row: {
-            style: {
-                height: "40px",
-            },
-            className: "cursor-pointer",
-        },
-        rowHeader: {
-            style: {
-                height: "40px",
-            },
-        },
+    const classNameRight: DataTableStyle = {
+        row: "cursor-pointer",
     }
 
     const setLeftSelectedWidthIndex = (index: number) => {
@@ -143,20 +113,19 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
                 }
                 closeDialog={closeDialogAddEdit}
             />
-
             <DoubleDataTable<UserRole, UserFormatted, RoleSmall, RoleSmall>
                 dataLeft={usersDataRaw}
                 formatLeft={formatUsersData}
                 columnsLeft={columnsUser}
                 configLeft={configLeft}
-                styleLeft={styleLeft}
+                classNameLeft={classNameLeft}
                 toolbarLeft={toolbarLeft}
                 keyLeftToRight={"Roles"}
                 dataRight={rolesData}
                 formatRight={formatRolesData}
                 columnsRight={columnsRole}
                 configRight={configRight}
-                styleRight={styleRight}
+                classNameRight={classNameRight}
                 onDoubleClickLeft={setLeftSelectedWidthIndex}
                 onChangeSelectedRight={changeRoleOfUser}
             />
@@ -197,7 +166,6 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
         header: ({ column }) => (
             <Button
                 size={"sm"}
-                variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
                 Prenom
@@ -210,7 +178,6 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
         header: ({ column }) => (
             <Button
                 size={"sm"}
-                variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
                 Nom
@@ -224,7 +191,6 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
             return (
                 <Button
                     size={"sm"}
-                    variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Email
@@ -239,7 +205,6 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
             return (
                 <Button
                     size={"sm"}
-                    variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Actif
@@ -257,7 +222,6 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
         header: ({ column }) => (
             <Button
                 size={"sm"}
-                variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
                 Mis à jour
@@ -270,7 +234,6 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
         header: ({ column }) => (
             <Button
                 size={"sm"}
-                variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
                 Créé
@@ -303,7 +266,6 @@ export const columnsRole: ColumnDef<RoleSmall>[] = [
             return (
                 <Button
                     size={"sm"}
-                    variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Nom
@@ -318,7 +280,6 @@ export const columnsRole: ColumnDef<RoleSmall>[] = [
             return (
                 <Button
                     size={"sm"}
-                    variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Description
