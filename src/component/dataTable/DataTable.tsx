@@ -5,13 +5,14 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
-    getSortedRowModel,
+    getSortedRowModel, Row,
     SortingState,
     useReactTable,
 } from "@tanstack/react-table"
+import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableRowHead } from "@/component/ui/table"
-import { ChangeEvent, ReactNode, useState } from "react"
+import {ChangeEvent, ReactNode, useRef, useState} from "react"
 import { Input } from "@/component/ui/input"
 
 import { remove as removeDiacritics } from "diacritics"
@@ -86,6 +87,17 @@ export function DataTable<TData, TValue>({
         },
     })
 
+    const { rows } = table.getRowModel()
+    const parentRef = useRef<HTMLDivElement>(null)
+
+    const virtualizer = useVirtualizer({
+        count: rows.length,
+        getScrollElement: () => parentRef.current,
+        estimateSize: () => 44,
+        overscan: 20,
+    })
+
+
     return (
         <div>
             <div className={"flex py-2 " + className?.filter?.div}>
@@ -97,8 +109,11 @@ export function DataTable<TData, TValue>({
                 />
                 {toolbar && <div className={"flex-grow text-right space-x-1" + className?.toolbar}>{toolbar}</div>}
             </div>
-            <div className={cn("relative w-full overflow-auto rounded-md border h-[calc(100dvh-125px)]", className?.containerDiv)}>
-                <Table className={className?.table}>
+            <div
+                ref={parentRef}
+                className={cn("relative w-full overflow-auto rounded-md border h-[calc(100dvh-125px)]", className?.containerDiv)}
+            >
+                <Table className={`h-[${virtualizer.getTotalSize()}px] ${className?.table}`}>
                     <TableHeader className={className?.header}>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRowHead
@@ -122,30 +137,33 @@ export function DataTable<TData, TValue>({
                     </TableHeader>
                     <TableBody className={className?.body}>
                         {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row, index) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                    className={`odd:bg-gray-100 ${className?.row}`}
-                                    onClick={() => row.toggleSelected()}
-                                    onDoubleClick={
-                                        onDoubleClick &&
-                                        (() => {
-                                            setRowSelection({})
-                                            onDoubleClick(index)
-                                        })
-                                    }
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell
-                                            key={cell.id}
-                                            className={className?.cell}
-                                        >
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
+                            virtualizer.getVirtualItems().map((virtualRow, index) => {
+                                const row = rows[virtualRow.index] as Row<TData>
+                                return (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                        className={`odd:bg-gray-100 ${className?.row}`}
+                                        onClick={() => row.toggleSelected()}
+                                        onDoubleClick={
+                                            onDoubleClick &&
+                                            (() => {
+                                                setRowSelection({})
+                                                onDoubleClick(index)
+                                            })
+                                        }
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell
+                                                key={cell.id}
+                                                className={className?.cell}
+                                            >
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                )
+                            })
                         ) : (
                             <TableRow>
                                 <TableCell

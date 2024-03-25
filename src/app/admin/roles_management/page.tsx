@@ -7,7 +7,6 @@ export default async function RoleManagementPage() {
 
     return (
         <>
-            <h1>Gestion des rôles</h1>
             <RoleManagementDoubleTable
                 rolesData={rolesData}
                 permissionsData={permissionsData}
