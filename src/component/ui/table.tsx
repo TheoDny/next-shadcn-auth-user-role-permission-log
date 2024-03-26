@@ -17,7 +17,7 @@ const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttribut
     ({ className, ...props }, ref) => (
         <thead
             ref={ref}
-            className={cn("[&_tr]:border-b top-0 sticky", className)}
+            className={cn("[&_tr]:border-b", className)}
             {...props}
         />
     ),
@@ -28,7 +28,7 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes
     ({ className, ...props }, ref) => (
         <tbody
             ref={ref}
-            className={cn("[&_tr:last-child]:border-0 overflow-y-auto max-h-[300px]", className)}
+            className={cn("[&_tr:last-child]:border-0 overflow-y-auto", className)}
             {...props}
         />
     ),
@@ -64,7 +64,7 @@ const TableRowHead = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<
     ({ className, ...props }, ref) => (
         <tr
             ref={ref}
-            className={cn("border-b", className)}
+            className={cn("border-b top-0 sticky z-50", className)}
             {...props}
         />
     ),

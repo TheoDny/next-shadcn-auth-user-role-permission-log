@@ -5,14 +5,15 @@ import {
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
-    getSortedRowModel, Row,
+    getSortedRowModel,
+    Row,
     SortingState,
     useReactTable,
 } from "@tanstack/react-table"
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { TableVirtuoso } from "react-virtuoso"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableRowHead } from "@/component/ui/table"
-import {ChangeEvent, ReactNode, useRef, useState} from "react"
+import { ChangeEvent, ReactNode, useRef, useState } from "react"
 import { Input } from "@/component/ui/input"
 
 import { remove as removeDiacritics } from "diacritics"
@@ -90,13 +91,12 @@ export function DataTable<TData, TValue>({
     const { rows } = table.getRowModel()
     const parentRef = useRef<HTMLDivElement>(null)
 
-    const virtualizer = useVirtualizer({
-        count: rows.length,
-        getScrollElement: () => parentRef.current,
-        estimateSize: () => 44,
-        overscan: 20,
-    })
-
+    // const virtualizer = useVirtualizer({
+    //     count: rows.length,
+    //     getScrollElement: () => parentRef.current,
+    //     estimateSize: () => 44,
+    //     overscan: 20,
+    // })
 
     return (
         <div>
@@ -110,12 +110,57 @@ export function DataTable<TData, TValue>({
                 {toolbar && <div className={"flex-grow text-right space-x-1" + className?.toolbar}>{toolbar}</div>}
             </div>
             <div
-                ref={parentRef}
-                className={cn("relative w-full overflow-auto rounded-md border h-[calc(100dvh-125px)]", className?.containerDiv)}
+                className={cn(
+                    "relative w-full overflow-auto rounded-md border h-[calc(100dvh-125px)]",
+                    className?.containerDiv,
+                )}
             >
-                <Table className={`h-[${virtualizer.getTotalSize()}px] ${className?.table}`}>
-                    <TableHeader className={className?.header}>
-                        {table.getHeaderGroups().map((headerGroup) => (
+                <TableVirtuoso
+                    totalCount={rows.length}
+                    increaseViewportBy={400}
+                    components={{
+                        Table: ({ style, ...props }) => {
+                            return (
+                                <Table
+                                    style={{ ...style, width: "100%" }}
+                                    className={className?.table}
+                                    {...props}
+                                />
+                            )
+                        },
+                        TableRow: (props) => {
+                            const index = props["data-index"]
+                            const row = rows[index]
+
+                            return (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                    className={`odd:bg-gray-100 ${className?.row}`}
+                                    onClick={() => row.toggleSelected()}
+                                    onDoubleClick={
+                                        onDoubleClick &&
+                                        (() => {
+                                            setRowSelection({})
+                                            onDoubleClick(index)
+                                        })
+                                    }
+                                    {...props}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell
+                                            key={cell.id}
+                                            className={className?.cell}
+                                        >
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            )
+                        },
+                    }}
+                    fixedHeaderContent={() => {
+                        return table.getHeaderGroups().map((headerGroup) => (
                             <TableRowHead
                                 key={headerGroup.id}
                                 className={cn("bg-primary", className?.rowHeader)}
@@ -125,6 +170,8 @@ export function DataTable<TData, TValue>({
                                         <TableHead
                                             key={header.id}
                                             className={className?.head}
+                                            colSpan={header.colSpan}
+                                            style={{ width: header.getSize() }}
                                         >
                                             {header.isPlaceholder
                                                 ? null
@@ -133,49 +180,9 @@ export function DataTable<TData, TValue>({
                                     )
                                 })}
                             </TableRowHead>
-                        ))}
-                    </TableHeader>
-                    <TableBody className={className?.body}>
-                        {table.getRowModel().rows?.length ? (
-                            virtualizer.getVirtualItems().map((virtualRow, index) => {
-                                const row = rows[virtualRow.index] as Row<TData>
-                                return (
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={row.getIsSelected() && "selected"}
-                                        className={`odd:bg-gray-100 ${className?.row}`}
-                                        onClick={() => row.toggleSelected()}
-                                        onDoubleClick={
-                                            onDoubleClick &&
-                                            (() => {
-                                                setRowSelection({})
-                                                onDoubleClick(index)
-                                            })
-                                        }
-                                    >
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell
-                                                key={cell.id}
-                                                className={className?.cell}
-                                            >
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                )
-                            })
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
-                                    Aucun résultat
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                        ))
+                    }}
+                />
             </div>
         </div>
     )

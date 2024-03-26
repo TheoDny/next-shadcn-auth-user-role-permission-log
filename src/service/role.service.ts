@@ -25,9 +25,11 @@ export const getAllRoleSmall = async (): Promise<RoleSmall[]> => {
 
 export const setPermissions = async (roleId: string, permissionIds: string[]): Promise<RoleFull> => {
     const session = await getServerSession(authOptions)
-    console.log(session, roleId, permissionIds)
     if (!session || !checkPermissions(session, ["gestion_role"])) {
         throw new Error("Unauthorized")
+    }
+    if (roleId === idAdminRole) {
+        throw new Error("La réattribution des permissions du role Admin n'est autorisé")
     }
 
     const role = await prisma.role.update({
@@ -41,10 +43,6 @@ export const setPermissions = async (roleId: string, permissionIds: string[]): P
         },
         include: includeRolePermissions,
     })
-
-    if (roleId === idAdminRole) {
-        throw new Error("La réattribution des permissions du role Admin n'est autorisé")
-    }
 
     addLog("ROLE_EDIT", `Edition des permissions du role ${role.name} (${role.id})`)
 

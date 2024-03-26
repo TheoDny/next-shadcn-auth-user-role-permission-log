@@ -15,27 +15,8 @@ const LogTable: FC<LogTableProps> = ({ dataLogUser }) => {
         <DataTable
             data={dataLogUser}
             columns={columnsLog}
-            style={styleTable}
         />
     )
-}
-
-const styleTable = {
-    div: {
-        style: {
-            height: "calc(100dvh - 150px)",
-        },
-    },
-    row: {
-        style: {
-            height: "40px",
-        },
-    },
-    rowHeader: {
-        style: {
-            height: "40px",
-        },
-    },
 }
 
 export const columnsLog: ColumnDef<LogUserFormatted>[] = [
@@ -44,7 +25,6 @@ export const columnsLog: ColumnDef<LogUserFormatted>[] = [
         header: ({ column }) => (
             <Button
                 size={"sm"}
-                variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
                 Créé

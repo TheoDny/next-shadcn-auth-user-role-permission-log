@@ -193,7 +193,6 @@ const columnsRole: ColumnDef<RoleFormatted>[] = [
         header: ({ column }) => (
             <Button
                 size={"sm"}
-                variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
                 Nom
@@ -210,7 +209,6 @@ const columnsRole: ColumnDef<RoleFormatted>[] = [
         header: ({ column }) => (
             <Button
                 size={"sm"}
-                variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
                 Mis à jour
@@ -223,7 +221,6 @@ const columnsRole: ColumnDef<RoleFormatted>[] = [
         header: ({ column }) => (
             <Button
                 size={"sm"}
-                variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
                 Créé
@@ -256,7 +253,6 @@ const columnsPermission: ColumnDef<Permission>[] = [
         header: ({ column }) => (
             <Button
                 size={"sm"}
-                variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
                 Nom

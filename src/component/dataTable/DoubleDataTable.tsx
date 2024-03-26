@@ -75,7 +75,6 @@ export default function DoubleDataTable<
             const leftSeletedKeys = Object.keys(leftSelected)
             if (leftSeletedKeys.length > 0) {
                 onChangeSelectedRight(parseInt(leftSeletedKeys[0]), Object.keys(rightSelected))
-                console.log(leftSeletedKeys[0], rightSelected)
             }
             isEdited.current = false
         }
