@@ -33,7 +33,7 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
         filterPlaceHolder: "Filtre des permissions...",
     }
     const classNameRight: DataTableStyle = {
-        row: "cursor-pointer"
+        row: "cursor-pointer",
     }
 
     const setLeftSelectedWidthIndex = (index: number) => {
