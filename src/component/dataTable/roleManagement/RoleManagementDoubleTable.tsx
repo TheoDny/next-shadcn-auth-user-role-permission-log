@@ -25,45 +25,15 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
     const configLeft: ConfigCustomTable = {
         filterPlaceHolder: "Filtre des roles...",
     }
-    const styleLeft: DataTableStyle = {
-        body: {
-            style: {
-                height: "500px", //"calc(100dvh - 200px)",
-            },
-        },
-        row: {
-            style: {
-                height: "40px",
-            },
-            className: "cursor-pointer",
-        },
-        rowHeader: {
-            style: {
-                height: "40px",
-            },
-        },
+    const classNameLeft: DataTableStyle = {
+        row: "cursor-pointer",
     }
 
     const configRight: ConfigCustomTable = {
         filterPlaceHolder: "Filtre des permissions...",
     }
-    const styleRight: DataTableStyle = {
-        body: {
-            style: {
-                height: "calc(100dvh - 200px)",
-            },
-        },
-        row: {
-            style: {
-                height: "40px",
-            },
-            className: "cursor-pointer",
-        },
-        rowHeader: {
-            style: {
-                height: "40px",
-            },
-        },
+    const classNameRight: DataTableStyle = {
+        row: "cursor-pointer"
     }
 
     const setLeftSelectedWidthIndex = (index: number) => {
@@ -147,14 +117,14 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
                 formatLeft={formatRolesData}
                 columnsLeft={columnsRole}
                 configLeft={configLeft}
-                styleLeft={styleLeft}
+                classNameLeft={classNameLeft}
                 toolbarLeft={toolbarLeft}
                 keyLeftToRight={"Permissions"}
                 dataRight={permissionsData}
                 formatRight={formatPermissionsData}
                 columnsRight={columnsPermission}
                 configRight={configRight}
-                styleRight={styleRight}
+                classNameRight={classNameRight}
                 onDoubleClickLeft={setLeftSelectedWidthIndex}
                 onChangeSelectedRight={changePermissionOfRole}
             />
