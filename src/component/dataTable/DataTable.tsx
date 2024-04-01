@@ -133,6 +133,7 @@ export function DataTable<TData, TValue>({
                                     onClick={(event) => {
                                         // Single click handler
                                         setTimeout(() => {
+                                            //@ts-ignore
                                             if (!event.target.getAttribute("data-double-clicked")) {
                                                 row.toggleSelected()
                                             }
@@ -140,6 +141,7 @@ export function DataTable<TData, TValue>({
                                     }}
                                     onDoubleClick={(event) => {
                                         // Double click handler
+                                        //@ts-ignore
                                         event.target.setAttribute("data-double-clicked", "true")
                                         console.log("double click")
                                         setRowSelection({})
@@ -147,6 +149,7 @@ export function DataTable<TData, TValue>({
                                     }}
                                     onMouseDown={(event) => {
                                         // Clear double click flag on mouse down
+                                        //@ts-ignore
                                         event.target.removeAttribute("data-double-clicked")
                                     }}
                                     {...props}
