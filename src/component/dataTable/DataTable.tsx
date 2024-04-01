@@ -91,13 +91,6 @@ export function DataTable<TData, TValue>({
     const { rows } = table.getRowModel()
     const parentRef = useRef<HTMLDivElement>(null)
 
-    // const virtualizer = useVirtualizer({
-    //     count: rows.length,
-    //     getScrollElement: () => parentRef.current,
-    //     estimateSize: () => 44,
-    //     overscan: 20,
-    // })
-
     return (
         <div>
             <div className={"flex py-2 " + className?.filter?.div}>
@@ -137,14 +130,25 @@ export function DataTable<TData, TValue>({
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                     className={`odd:bg-gray-100 ${className?.row}`}
-                                    onClick={() => row.toggleSelected()}
-                                    onDoubleClick={
-                                        onDoubleClick &&
-                                        (() => {
-                                            setRowSelection({})
-                                            onDoubleClick(index)
-                                        })
-                                    }
+                                    onClick={(event) => {
+                                        // Single click handler
+                                        setTimeout(() => {
+                                            if (!event.target.getAttribute("data-double-clicked")) {
+                                                row.toggleSelected()
+                                            }
+                                        }, 200) // Adjust the timeout as needed
+                                    }}
+                                    onDoubleClick={(event) => {
+                                        // Double click handler
+                                        event.target.setAttribute("data-double-clicked", "true")
+                                        console.log("double click")
+                                        setRowSelection({})
+                                        onDoubleClick && onDoubleClick(index)
+                                    }}
+                                    onMouseDown={(event) => {
+                                        // Clear double click flag on mouse down
+                                        event.target.removeAttribute("data-double-clicked")
+                                    }}
                                     {...props}
                                 >
                                     {row.getVisibleCells().map((cell) => (

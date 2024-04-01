@@ -6,7 +6,9 @@ import { ButtonLoading } from "@/component/ui/button-loading"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { addRoleAction, editRoleAction } from "@/action/role.action"
-import { RoleFull } from "@/type/role.type" // replace with your actual import path
+import { RoleFull } from "@/type/role.type"
+import { addRoleZod } from "../../../../../zod/role.zod"
+import { toast } from "sonner" // replace with your actual import path
 
 type props = {
     defaultValues?: {
@@ -20,21 +22,17 @@ type props = {
 const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
     const [loading, setLoading] = useState(false)
 
-    const formSchema = z.object({
-        name: z.string().min(1).max(48, "Le nom doit être compris entre 1 et 48 caractères"),
-        description: z.string().max(96, "La description ne doit pas dépasser 96 caractère ").optional(),
-    })
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof addRoleZod>>({
+        resolver: zodResolver(addRoleZod),
         defaultValues,
     })
 
-    const addRole = async (values: z.infer<typeof formSchema>) => {
+    const addRole = async (values: z.infer<typeof addRoleZod>) => {
         setLoading(true)
+
         const response = await addRoleAction(values)
         if (response.validationErrors) {
-            console.error(response.serverError)
+            console.error(response.validationErrors)
         } else if (response.serverError) {
             console.error(response.serverError)
         } else if (!response.data) {
@@ -42,15 +40,17 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
         } else {
             afterSubmit(response.data)
         }
+
         setLoading(false)
     }
 
-    const editRole = async (values: z.infer<typeof formSchema>) => {
-        if (!defaultValues) return console.error("Aucun roleId fourni")
+    const editRole = async (values: z.infer<typeof addRoleZod>) => {
+        if (!defaultValues?.id) return console.error("Aucun roleId fourni")
         setLoading(true)
+
         const response = await editRoleAction({ roleId: defaultValues.id, ...values })
         if (response.validationErrors) {
-            console.error(response.serverError)
+            console.error(response.validationErrors)
         } else if (response.serverError) {
             console.error(response.serverError)
         } else if (!response.data) {
@@ -58,6 +58,7 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
         } else {
             afterSubmit(response.data)
         }
+
         setLoading(false)
     }
 
