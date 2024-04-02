@@ -6,13 +6,12 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     getSortedRowModel,
-    Row,
     SortingState,
     useReactTable,
 } from "@tanstack/react-table"
 import { TableVirtuoso } from "react-virtuoso"
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableRowHead } from "@/component/ui/table"
+import { Table, TableCell, TableHead, TableRow, TableRowHead } from "@/component/ui/table"
 import { ChangeEvent, ReactNode, useRef, useState } from "react"
 import { Input } from "@/component/ui/input"
 
