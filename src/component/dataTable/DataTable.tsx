@@ -89,7 +89,7 @@ export function DataTable<TData, TValue>({
     })
 
     const { rows } = table.getRowModel()
-    const parentRef = useRef<HTMLDivElement>(null)
+    let selectedDoubleClickRef = useRef<string>("")
 
     return (
         <div>
@@ -130,27 +130,21 @@ export function DataTable<TData, TValue>({
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                     className={`odd:bg-gray-100 ${className?.row}`}
-                                    onClick={(event) => {
-                                        // Single click handler
-                                        setTimeout(() => {
-                                            //@ts-ignore
-                                            if (!event.target.getAttribute("data-double-clicked")) {
+                                    onClick={(_event) => {
+                                        if (onDoubleClick) {
+                                            if (row.id === selectedDoubleClickRef.current) {
+                                                onDoubleClick(index)
+                                                row.toggleSelected(true)
+                                            } else {
                                                 row.toggleSelected()
+                                                selectedDoubleClickRef.current = row.id
+                                                setTimeout(() => {
+                                                    selectedDoubleClickRef.current = ""
+                                                }, 300)
                                             }
-                                        }, 200) // Adjust the timeout as needed
-                                    }}
-                                    onDoubleClick={(event) => {
-                                        // Double click handler
-                                        //@ts-ignore
-                                        event.target.setAttribute("data-double-clicked", "true")
-                                        console.log("double click")
-                                        setRowSelection({})
-                                        onDoubleClick && onDoubleClick(index)
-                                    }}
-                                    onMouseDown={(event) => {
-                                        // Clear double click flag on mouse down
-                                        //@ts-ignore
-                                        event.target.removeAttribute("data-double-clicked")
+                                        } else {
+                                            row.toggleSelected()
+                                        }
                                     }}
                                     {...props}
                                 >
