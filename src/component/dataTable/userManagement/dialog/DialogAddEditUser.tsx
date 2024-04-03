@@ -25,7 +25,9 @@ export function DialogAddEditUser({ show, defaultValues, afterSubmit, closeDialo
         >
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{defaultValues?.id ? "Edition d'un role" : "Ajout d'un role"}</DialogTitle>
+                    <DialogTitle>
+                        {defaultValues?.id ? "Edition d'un utilisateur" : "Ajout d'un utilisateur"}
+                    </DialogTitle>
                 </DialogHeader>
                 <AddEditUserForm
                     defaultValues={defaultValues}
