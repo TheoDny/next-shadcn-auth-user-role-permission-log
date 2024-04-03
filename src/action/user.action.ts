@@ -10,57 +10,33 @@ import {
 } from "@/service/user.service"
 import { z } from "zod"
 import { action } from "@/lib/safe-actions"
+import { activeDesactiveUser, addUserZod, editUserZod } from "@/zod/user.zod"
 
 export const setRolesAction = action(
     z.object({
         userId: z.string(),
-        roleIds: z.array(z.string()),
+        roleIds: z.array(z.string().cuid()),
     }),
     async ({ userId, roleIds }) => {
         return await setRoles(userId, roleIds)
     },
 )
 
-export const disabledUserAction = action(
-    z.object({
-        userId: z.string().cuid(),
-    }),
-    async ({ userId }) => {
-        return await disabledUser(userId)
-    },
-)
+export const disabledUserAction = action(activeDesactiveUser, async ({ userId }) => {
+    return await disabledUser(userId)
+})
 
-export const activeUserAction = action(
-    z.object({
-        userId: z.string().cuid(),
-    }),
-    async ({ userId }) => {
-        return await activeUser(userId)
-    },
-)
+export const activeUserAction = action(activeDesactiveUser, async ({ userId }) => {
+    return await activeUser(userId)
+})
 
-export const addUserAction = action(
-    z.object({
-        firstname: z.string().min(1),
-        lastname: z.string().min(1),
-        email: z.string().min(1),
-    }),
-    async ({ firstname, lastname, email }) => {
-        return await addUser(firstname, lastname, email)
-    },
-)
+export const addUserAction = action(addUserZod, async ({ firstname, lastname, email }) => {
+    return await addUser(firstname, lastname, email)
+})
 
-export const editUserAction = action(
-    z.object({
-        userId: z.string().cuid(),
-        firstname: z.string().min(1),
-        lastname: z.string().min(1),
-        email: z.string().email(),
-    }),
-    async ({ userId, firstname, lastname, email }) => {
-        return await editUser(userId, firstname, lastname, email)
-    },
-)
+export const editUserAction = action(editUserZod, async ({ userId, firstname, lastname, email }) => {
+    return await editUser(userId, firstname, lastname, email)
+})
 
 export const resetPasswordAction = action(
     z.object({

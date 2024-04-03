@@ -7,8 +7,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { addRoleAction, editRoleAction } from "@/action/role.action"
 import { RoleFull } from "@/type/role.type"
-import { addRoleZod } from "../../../../../zod/role.zod"
-import { toast } from "sonner" // replace with your actual import path
+import { addRoleZod } from "@/zod/role.zod"
 
 type props = {
     defaultValues?: {
@@ -35,7 +34,7 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
             console.error(response.validationErrors)
         } else if (response.serverError) {
             console.error(response.serverError)
-        } else if (!response.data) {
+        } else if (!response.data?.id) {
             console.error("Une erreur est survenue")
         } else {
             afterSubmit(response.data)

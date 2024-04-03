@@ -6,7 +6,8 @@ import { ButtonLoading } from "@/component/ui/button-loading"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { addUserAction, editUserAction } from "@/action/user.action"
-import { UserFull, UserRole } from "@/type/user.type" // replace with your actual import path
+import { UserRole } from "@/type/user.type"
+import { addUserZod } from "@/zod/user.zod" // replace with your actual import path
 
 type props = {
     defaultValues?: {
@@ -22,18 +23,12 @@ type props = {
 const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
     const [loading, setLoading] = useState(false)
 
-    const formSchema = z.object({
-        firstname: z.string().min(1).max(48, "Le prénom doit être compris entre 1 et 48 caractères"),
-        lastname: z.string().min(1).max(48, "Le nom doit être compris entre 1 et 48 caractères"),
-        email: z.string().email("L'email doit être valide"),
-    })
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof addUserZod>>({
+        resolver: zodResolver(addUserZod),
         defaultValues,
     })
 
-    const addUser = async (values: z.infer<typeof formSchema>) => {
+    const addUser = async (values: z.infer<typeof addUserZod>) => {
         setLoading(true)
         const response = await addUserAction(values)
         if (response.validationErrors) {
@@ -48,7 +43,7 @@ const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
         setLoading(false)
     }
 
-    const editUser = async (values: z.infer<typeof formSchema>) => {
+    const editUser = async (values: z.infer<typeof addUserZod>) => {
         if (!defaultValues) return console.error("Aucun userId fourni")
         setLoading(true)
         const response = await editUserAction({ userId: defaultValues.id, ...values })
