@@ -51,14 +51,6 @@ export const getAllUserRole = async (): Promise<UserRole[]> => {
 }
 
 export const setRoles = async (userId: string, roleIds: string[]): Promise<UserRole> => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_user"])) {
-        throw new Error("Unauthorized")
-    }
-    if (userId === idAdminAccount) {
-        throw new Error("La réattribution des roles du compte Administrateur n'est autorisé")
-    }
-
     const user = await prisma.user.update({
         where: { id: userId },
         data: {
@@ -80,14 +72,6 @@ export const setRoles = async (userId: string, roleIds: string[]): Promise<UserR
 }
 
 export const disabledUser = async (userId: string) => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_user"])) {
-        throw new Error("Unauthorized")
-    }
-    if (userId === idAdminAccount) {
-        throw new Error("La désactivation du compte Administrateur n'est autorisé")
-    }
-
     const user = await prisma.user.update({
         where: { id: userId },
         data: {
@@ -105,11 +89,6 @@ export const disabledUser = async (userId: string) => {
 }
 
 export const activeUser = async (userId: string) => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_user"])) {
-        throw new Error("Unauthorized")
-    }
-
     const user = await prisma.user.update({
         where: { id: userId },
         data: {
@@ -127,11 +106,6 @@ export const activeUser = async (userId: string) => {
 }
 
 export const addUser = async (firstname: string, lastname: string, email: string): Promise<UserRole> => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
-        throw new Error("Unauthorized")
-    }
-
     const newUser = await prisma.user.create({
         data: {
             firstname: firstname,
@@ -163,14 +137,6 @@ export const editUser = async (
     lastname: string,
     email: string,
 ): Promise<UserRole> => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
-        throw new Error("Unauthorized")
-    }
-    if (userId === idAdminAccount) {
-        throw new Error("L'édition du compte Administrateur n'est autorisé")
-    }
-
     const editedUser = await prisma.user.update({
         where: { id: userId },
         data: {
@@ -208,15 +174,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
     return true
 }
 
-export const sendMailPasswordReset = async (userId?: string | null) => {
-    const session = await getServerSession(authOptions)
-    if (!session || (!checkPermissions(session, ["gestion_role"]) && Boolean(userId))) {
-        throw new Error("Unauthorized")
-    }
-    if (!userId) {
-        userId = session.user.id as string
-    }
-
+export const sendMailPasswordReset = async (userId: string) => {
     const user = await prisma.user.findUnique({
         where: { id: userId },
     })
