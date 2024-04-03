@@ -119,6 +119,7 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
                 configLeft={configLeft}
                 classNameLeft={classNameLeft}
                 toolbarLeft={toolbarLeft}
+                enableColumnVisibilityLeft={true}
                 keyLeftToRight={"Permissions"}
                 dataRight={permissionsData}
                 formatRight={formatPermissionsData}
@@ -127,6 +128,7 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
                 classNameRight={classNameRight}
                 onDoubleClickLeft={setLeftSelectedWidthIndex}
                 onChangeSelectedRight={changePermissionOfRole}
+                enableColumnVisibilityRight={true}
             />
         </div>
     )
@@ -155,6 +157,9 @@ const columnsRole: ColumnDef<RoleFormatted>[] = [
                 aria-label="Select row"
             />
         ),
+        size: 10,
+        minSize: 10, //enforced during column resizing
+        maxSize: 10,
         enableSorting: false,
         enableHiding: false,
     },

@@ -17,6 +17,7 @@ type props<L, FL, R, FR> = {
     configLeft?: ConfigCustomTable
     classNameLeft?: DataTableStyle
     toolbarLeft?: ReactNode
+    enableColumnVisibilityLeft?: boolean
     keyLeftToRight: keyof L
     dataRight: R[]
     formatRight: (data: R[]) => FR[]
@@ -25,6 +26,7 @@ type props<L, FL, R, FR> = {
     classNameRight?: DataTableStyle
     onDoubleClickLeft?: (index: number) => any
     onChangeSelectedRight?: (leftIndex: number, rightIds: string[]) => any
+    enableColumnVisibilityRight?: boolean
 }
 
 export default function DoubleDataTable<
@@ -39,6 +41,7 @@ export default function DoubleDataTable<
     configLeft,
     classNameLeft,
     toolbarLeft,
+    enableColumnVisibilityLeft,
     keyLeftToRight,
     dataRight,
     formatRight,
@@ -47,6 +50,7 @@ export default function DoubleDataTable<
     classNameRight,
     onDoubleClickLeft,
     onChangeSelectedRight,
+    enableColumnVisibilityRight,
 }: props<L, FL, R, FR>) {
     const [leftSelected, setLeftSelected] = useState({})
     const [rightSelected, setRightSelected] = useState<any>({})
@@ -105,6 +109,7 @@ export default function DoubleDataTable<
                     className={classNameLeft}
                     toolbar={toolbarLeft}
                     onDoubleClick={onDoubleClickLeft}
+                    enableColumnVisibility={enableColumnVisibilityLeft}
                 />
             </div>
             <div
@@ -125,6 +130,7 @@ export default function DoubleDataTable<
                         ...configRight,
                     }}
                     className={classNameRight}
+                    enableColumnVisibility={enableColumnVisibilityRight}
                 />
             </div>
         </div>

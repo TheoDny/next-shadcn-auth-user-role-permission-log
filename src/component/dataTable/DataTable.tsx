@@ -8,15 +8,23 @@ import {
     getSortedRowModel,
     SortingState,
     useReactTable,
+    VisibilityState,
 } from "@tanstack/react-table"
 import { TableVirtuoso } from "react-virtuoso"
 
 import { Table, TableCell, TableHead, TableRow, TableRowHead } from "@/component/ui/table"
-import { ChangeEvent, ReactNode, useRef, useState } from "react"
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from "@/component/ui/dropdown-menu"
+import { ChangeEvent, ReactNode, useMemo, useRef, useState } from "react"
 import { Input } from "@/component/ui/input"
 
 import { remove as removeDiacritics } from "diacritics"
 import { cn } from "@/lib/utils"
+import { Button } from "@/component/ui/button"
 
 export type DataTableStyle = {
     toolbar?: string
@@ -41,6 +49,7 @@ interface DataTableProps<TData, TValue> {
     className?: DataTableStyle
     toolbar?: ReactNode
     onDoubleClick?: (index: number) => any
+    enableColumnVisibility?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -50,10 +59,12 @@ export function DataTable<TData, TValue>({
     className,
     toolbar,
     onDoubleClick,
+    enableColumnVisibility,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [rowSelection, setRowSelection] = useState({})
     const [globalFilter, setGlobalFilter] = useState("")
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
     const filterWithAccents: FilterFn<any> = (row, columnId: string, filterValue: string) => {
         const cellValue = row.getValue<string | null>(columnId)
@@ -78,11 +89,13 @@ export function DataTable<TData, TValue>({
         onGlobalFilterChange: setGlobalFilter,
         getFilteredRowModel: getFilteredRowModel(),
         globalFilterFn: filterWithAccents,
+        onColumnVisibilityChange: setColumnVisibility,
         ...config,
         state: {
             sorting,
             rowSelection,
             globalFilter,
+            columnVisibility,
             ...config?.state,
         },
     })
@@ -90,16 +103,53 @@ export function DataTable<TData, TValue>({
     const { rows } = table.getRowModel()
     let selectedDoubleClickRef = useRef<string>("")
 
+    const dropDonwColumnVisibility = useMemo<any>(
+        () => (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        variant="outline"
+                        className="ml-auto"
+                        size={"sm"}
+                    >
+                        Visibilité
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    {table
+                        .getAllColumns()
+                        .filter((column) => column.getCanHide())
+                        .map((column) => {
+                            return (
+                                <DropdownMenuCheckboxItem
+                                    key={column.id}
+                                    className="capitalize"
+                                    checked={column.getIsVisible()}
+                                    onCheckedChange={(value: any) => column.toggleVisibility(!!value)}
+                                >
+                                    {column.id}
+                                </DropdownMenuCheckboxItem>
+                            )
+                        })}
+                </DropdownMenuContent>
+            </DropdownMenu>
+        ),
+        [table, columnVisibility],
+    )
+
     return (
         <div>
-            <div className={"flex py-2 " + className?.filter?.div}>
+            <div className={"flex py-2 space-x-1 justify-between " + className?.filter?.div}>
                 <Input
                     placeholder={config?.filterPlaceHolder ?? "Filtre..."}
                     value={globalFilter ?? ""}
                     onChange={handleFilterChange}
                     className={"max-w-sm " + className?.filter?.input}
                 />
-                {toolbar && <div className={"flex-grow text-right space-x-1" + className?.toolbar}>{toolbar}</div>}
+                <div className={"flex-grow text-right space-x-1 " + className?.toolbar}>
+                    {toolbar && toolbar}
+                    {enableColumnVisibility && dropDonwColumnVisibility}
+                </div>
             </div>
             <div
                 className={cn(

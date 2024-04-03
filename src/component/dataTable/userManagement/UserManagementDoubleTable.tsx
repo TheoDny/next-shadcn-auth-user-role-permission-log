@@ -119,6 +119,7 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
                 configLeft={configLeft}
                 classNameLeft={classNameLeft}
                 toolbarLeft={toolbarLeft}
+                enableColumnVisibilityLeft={true}
                 keyLeftToRight={"Roles"}
                 dataRight={rolesData}
                 formatRight={formatRolesData}
@@ -127,6 +128,7 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
                 classNameRight={classNameRight}
                 onDoubleClickLeft={setLeftSelectedWidthIndex}
                 onChangeSelectedRight={changeRoleOfUser}
+                enableColumnVisibilityRight={true}
             />
         </div>
     )
@@ -157,6 +159,7 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
                 aria-label="Select row"
             />
         ),
+        size: 10,
         enableSorting: false,
         enableHiding: false,
     },
@@ -256,6 +259,7 @@ export const columnsRole: ColumnDef<RoleSmall>[] = [
                 aria-label="Select row"
             />
         ),
+        size: 10,
         enableSorting: false,
         enableHiding: false,
     },
