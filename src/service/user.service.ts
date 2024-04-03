@@ -1,14 +1,10 @@
 import { prisma } from "@/lib/prisma"
 import { includeUserFull, includeUserRole, UserFull, UserInfoFull, UserRole } from "@/type/user.type"
 import { PermissionSmall } from "@/type/permission.type"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
 import { addLog } from "@/service/log.service"
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { hash } from "bcryptjs"
 import { sendEmailNewUser } from "@/service/mail.service"
-import { idAdminAccount } from "@/../prisma/dataSeed"
-import { checkPermissions } from "@/util/auth.util"
 
 export const getUserFullInfoFromEmailOrId = async (
     emailOrId: string,
