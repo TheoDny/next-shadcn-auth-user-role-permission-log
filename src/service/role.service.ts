@@ -1,11 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { includeRolePermissions, RoleFull, RoleSmall, selectRoleSmall } from "@/type/role.type"
-import { authOptions } from "@/lib/auth"
-import { getServerSession } from "next-auth"
 import { Role } from "@prisma/client"
 import { addLog } from "@/service/log.service"
-import { idAdminRole } from "../../prisma/dataSeed"
-import { checkPermissions } from "@/util/auth.util"
 
 export const getAllRolePermission = async (): Promise<RoleFull[]> => {
     return prisma.role.findMany({
@@ -24,14 +20,6 @@ export const getAllRoleSmall = async (): Promise<RoleSmall[]> => {
 }
 
 export const setPermissions = async (roleId: string, permissionIds: string[]): Promise<RoleFull> => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
-        throw new Error("Unauthorized")
-    }
-    if (roleId === idAdminRole) {
-        throw new Error("La réattribution des permissions du role Admin n'est autorisé")
-    }
-
     const role = await prisma.role.update({
         where: { id: roleId },
         data: {
@@ -50,11 +38,6 @@ export const setPermissions = async (roleId: string, permissionIds: string[]): P
 }
 
 export const addRole = async (name: string, description?: string): Promise<RoleFull> => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
-        throw new Error("Unauthorized")
-    }
-
     const newRole = await prisma.role.create({
         data: {
             name: name,
@@ -69,14 +52,6 @@ export const addRole = async (name: string, description?: string): Promise<RoleF
 }
 
 export const editRole = async (roleId: string, name: string, description?: string): Promise<RoleFull> => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
-        throw new Error("Unauthorized")
-    }
-    if (roleId === idAdminRole) {
-        throw new Error("La édition du role Admin n'est autorisé")
-    }
-
     const editedRole = await prisma.role.update({
         where: {
             id: roleId,
@@ -94,15 +69,6 @@ export const editRole = async (roleId: string, name: string, description?: strin
 }
 
 export const deleteRole = async (roleId: string): Promise<Role> => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
-        throw new Error("Unauthorized")
-    }
-
-    if (roleId === idAdminRole) {
-        throw new Error("La suppression du role Admin n'est autorisé")
-    }
-
     const deletedRole = await prisma.role.delete({
         where: {
             id: roleId,
