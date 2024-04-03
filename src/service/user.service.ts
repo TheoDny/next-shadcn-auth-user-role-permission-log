@@ -111,15 +111,13 @@ export const addUser = async (firstname: string, lastname: string, email: string
         },
         include: includeUserRole,
     })
-    try {
-        const resEmail = await sendEmailNewUser(newUser.email, newUser.id)
-        if (!resEmail) throw new Error("Sending email failed")
-    } catch (error) {
-        console.error("Error while sending email user", error)
+
+    const resEmail = await sendEmailNewUser(newUser.email, newUser.id)
+    if (!resEmail) {
         await prisma.user.delete({
             where: { id: newUser.id },
         })
-        throw new Error("Error while sending email user")
+        throw new Error("Sending email failed")
     }
 
     addLog("USER_ADD", `Ajout de l'utilisateur ${newUser.lastname} ${newUser.firstname} (${newUser.id})`)
@@ -167,6 +165,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
     })
 
     addLog("USER_CHANGE_PWD", "Changement de mot de passe", idUser)
+
     return true
 }
 
@@ -178,17 +177,10 @@ export const sendMailPasswordReset = async (userId: string) => {
         throw new Error("User not found")
     }
 
-    try {
-        const resEmail = await sendEmailNewUser(user.email, user.id)
-        if (!resEmail) {
-            throw new Error("failed to send email")
-        }
-        return resEmail
-    } catch (error) {
-        console.error("Error while sending email user", error)
-        await prisma.user.delete({
-            where: { id: user.id },
-        })
-        throw new Error("Error while sending email user")
+    const resEmail = await sendEmailNewUser(user.email, user.id)
+    if (!resEmail) {
+        throw new Error("failed to send email")
     }
+
+    return resEmail
 }
