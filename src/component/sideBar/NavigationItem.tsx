@@ -33,8 +33,8 @@ export const NavigationItem = ({
             {"path" in item ? (
                 <Link
                     href={item.path}
-                    className={`flex flex-row text-base items-center p-2 rounded-lg hover:bg-zinc-100 ${
-                        item.path === pathname ? "bg-zinc-100" : ""
+                    className={`flex flex-row text-base items-center p-2 rounded-lg hover:bg-secondary ${
+                        item.path === pathname ? "bg-secondary" : ""
                     }`}
                 >
                     <span className="font-semibold flex">{item.title}</span>
@@ -60,8 +60,8 @@ export const NavigationItem = ({
                                         <div key={index}>
                                             <Link
                                                 href={subItem.path}
-                                                className={`flex flex-row items-center text-base  px-2 py-1 rounded-lg hover:bg-zinc-100 ${
-                                                    subItem.path === pathname ? "bg-zinc-100" : ""
+                                                className={`flex flex-row items-center text-base  px-2 py-1 rounded-lg hover:bg-secondary ${
+                                                    subItem.path === pathname ? "bg-secondary" : ""
                                                 }`}
                                             >
                                                 <span className="font-semibold flex">{subItem.title}</span>

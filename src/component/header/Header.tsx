@@ -1,20 +1,20 @@
 "use server"
 
 import React from "react"
-
 import Link from "next/link"
-import { useSelectedLayoutSegment } from "next/navigation"
-
-// import useScroll from '@/hooks/use-scroll';
 import { cn } from "@/lib/utils"
+import { ModeToggle } from "@/component/ui/select-theme"
+import { Session } from "next-auth"
+import { getInitials } from "@/util/diverse.util"
 
-const Header = async () => {
+type props = {
+    session: Session
+}
+const Header = async ({ session }: props) => {
+    const initials = getInitials(session.user.firstname, session.user.lastname)
+
     return (
-        <div
-            className={cn(
-                `sticky inset-x-0 top-0 z-30 bg-background w-full transition-all border-b border-gray-200`,
-            )}
-        >
+        <div className={"sticky inset-x-0 top-0 z-30 bg-background w-full transition-all border-b border-accent"}>
             <div className="flex h-[47px] items-center justify-between px-4">
                 <div className="flex items-center space-x-4">
                     <Link
@@ -26,10 +26,11 @@ const Header = async () => {
                     </Link>
                 </div>
 
-                <div className="hidden md:block">
-                    <div className="h-8 w-8 rounded-full bg-zinc-300 flex items-center justify-center text-center">
-                        <span className="font-semibold text-sm">HQ</span>
+                <div className="flex flex-row space-x-3">
+                    <div className="hidden h-8 w-8 rounded-full bg-primary text-primary-foreground md:flex items-center justify-center text-center">
+                        <span className="font-semibold text-sm">{initials}</span>
                     </div>
+                    <ModeToggle />
                 </div>
             </div>
         </div>

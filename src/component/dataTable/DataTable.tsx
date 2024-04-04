@@ -178,7 +178,7 @@ export function DataTable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    className={`${index % 2 ? "bg-gray-100" : ""} ${className?.row}`}
+                                    className={`${index % 2 ? "bg-muted" : ""} ${className?.row}`}
                                     onClick={(_event) => {
                                         if (onDoubleClick) {
                                             if (row.id === selectedDoubleClickRef.current) {
