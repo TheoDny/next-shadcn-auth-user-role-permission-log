@@ -19,7 +19,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/component/ui/dropdown-menu"
-import { ChangeEvent, ReactNode, useMemo, useRef, useState } from "react"
+import { ChangeEvent, ReactNode, useRef, useState } from "react"
 import { Input } from "@/component/ui/input"
 
 import { remove as removeDiacritics } from "diacritics"
