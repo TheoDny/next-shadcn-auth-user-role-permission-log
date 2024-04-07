@@ -14,10 +14,7 @@ export const NAVIGATION_ITEMS: NavigationItemType[] = [
         ],
     },
     {
-        title: "Settings",
-        subMenuItems: [
-            { title: "Account", path: "/settings/account" },
-            { title: "Privacy", path: "/settings/privacy" },
-        ],
+        title: "Paramètres",
+        subMenuItems: [{ title: "Mon Compte", path: "/settings/account" }],
     },
 ]
