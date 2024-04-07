@@ -66,7 +66,7 @@ export const addUserAction = action(addUserZod, async ({ firstname, lastname, em
 
 export const editUserAction = action(editUserZod, async ({ userId, firstname, lastname, email }) => {
     const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
+    if (!session || (!checkPermissions(session, ["gestion_role"]) && userId !== session.user.id)) {
         throw new Error("Unauthorized")
     }
     if (userId === idAdminAccount) {
