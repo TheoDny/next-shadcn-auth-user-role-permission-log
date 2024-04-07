@@ -26,6 +26,7 @@ type props<L, FL, R, FR> = {
     classNameRight?: DataTableStyle
     onDoubleClickLeft?: (index: number) => any
     onChangeSelectedRight?: (leftIndex: number, rightIds: string[]) => any
+    toolbarRight?: ReactNode
     enableColumnVisibilityRight?: boolean
 }
 
@@ -50,6 +51,7 @@ export default function DoubleDataTable<
     classNameRight,
     onDoubleClickLeft,
     onChangeSelectedRight,
+    toolbarRight,
     enableColumnVisibilityRight,
 }: props<L, FL, R, FR>) {
     const [leftSelected, setLeftSelected] = useState({})
@@ -94,45 +96,40 @@ export default function DoubleDataTable<
 
     return (
         <div className={`flex  flex-wrap flex-row ${isWrapped ? "space-y-2" : "space-x-1"}`}>
-            <div className="flex-grow">
-                <DataTable
-                    columns={columnsLeft}
-                    data={formateDataLeft}
-                    config={{
-                        enableMultiRowSelection: false,
-                        onRowSelectionChange: setLeftSelected,
-                        state: {
-                            rowSelection: leftSelected,
-                        },
-                        ...configLeft,
-                    }}
-                    className={classNameLeft}
-                    toolbar={toolbarLeft}
-                    onDoubleClick={onDoubleClickLeft}
-                    enableColumnVisibility={enableColumnVisibilityLeft}
-                />
-            </div>
-            <div
-                ref={elementRef}
-                className="flex-grow"
-            >
-                <DataTable
-                    columns={columnsRight}
-                    data={formatedDataRight}
-                    config={{
-                        enableRowSelection: Object.keys(leftSelected).length > 0,
-                        enableMultiRowSelection: true,
-                        onRowSelectionChange: handleChangeSelectedRight,
-                        getRowId: (row: { id: string }) => row.id,
-                        state: {
-                            rowSelection: rightSelected,
-                        },
-                        ...configRight,
-                    }}
-                    className={classNameRight}
-                    enableColumnVisibility={enableColumnVisibilityRight}
-                />
-            </div>
+            <DataTable
+                columns={columnsLeft}
+                data={formateDataLeft}
+                config={{
+                    enableMultiRowSelection: false,
+                    onRowSelectionChange: setLeftSelected,
+                    state: {
+                        rowSelection: leftSelected,
+                    },
+                    ...configLeft,
+                }}
+                className={{ containerDiv: "grow-[2]", ...classNameLeft }}
+                toolbar={toolbarLeft}
+                onDoubleClick={onDoubleClickLeft}
+                enableColumnVisibility={enableColumnVisibilityLeft}
+            />
+            <DataTable
+                refDiv={elementRef}
+                columns={columnsRight}
+                data={formatedDataRight}
+                config={{
+                    enableRowSelection: Object.keys(leftSelected).length > 0,
+                    enableMultiRowSelection: true,
+                    onRowSelectionChange: handleChangeSelectedRight,
+                    getRowId: (row: { id: string }) => row.id,
+                    state: {
+                        rowSelection: rightSelected,
+                    },
+                    ...configRight,
+                }}
+                className={classNameRight}
+                enableColumnVisibility={enableColumnVisibilityRight}
+                toolbar={toolbarRight}
+            />
         </div>
     )
 }

@@ -29,6 +29,7 @@ import { Button } from "@/component/ui/button"
 export type DataTableStyle = {
     toolbar?: string
     containerDiv?: string
+    containerTableDiv?: string
     table?: string
     header?: string
     rowHeader?: string
@@ -50,6 +51,7 @@ interface DataTableProps<TData, TValue> {
     toolbar?: ReactNode
     onDoubleClick?: (index: number) => any
     enableColumnVisibility?: boolean
+    refDiv?: any
 }
 
 export function DataTable<TData, TValue>({
@@ -60,6 +62,7 @@ export function DataTable<TData, TValue>({
     toolbar,
     onDoubleClick,
     enableColumnVisibility,
+    refDiv,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [rowSelection, setRowSelection] = useState({})
@@ -138,23 +141,27 @@ export function DataTable<TData, TValue>({
     )
 
     return (
-        <div>
-            <div className={"flex py-2 space-x-1 justify-between " + className?.filter?.div}>
-                <Input
-                    placeholder={config?.filterPlaceHolder ?? "Filtre..."}
-                    value={globalFilter ?? ""}
-                    onChange={handleFilterChange}
-                    className={"max-w-sm " + className?.filter?.input}
-                />
-                <div className={"flex-grow text-right space-x-1 " + className?.toolbar}>
-                    {toolbar && toolbar}
+        <div
+            className={cn("grow", className?.containerDiv)}
+            ref={refDiv}
+        >
+            <div className={cn("flex flex-col py-1 space-x-1 space-y-1 justify-between", className?.filter?.div)}>
+                <div className="flex flex-row">
+                    <Input
+                        placeholder={config?.filterPlaceHolder ?? "Filtre..."}
+                        value={globalFilter ?? ""}
+                        onChange={handleFilterChange}
+                        className={"max-w-sm " + className?.filter?.input}
+                        sizeElement={"sm"}
+                    />
                     {enableColumnVisibility && dropDonwColumnVisibility}
                 </div>
+                <div className={"flex-grow text-right space-x-1 " + className?.toolbar}>{toolbar && toolbar}</div>
             </div>
             <div
                 className={cn(
-                    "relative w-full overflow-auto rounded-md border h-[calc(100dvh-125px)]",
-                    className?.containerDiv,
+                    "relative w-full overflow-auto rounded-md border h-[calc(100dvh-155px)]",
+                    className?.containerTableDiv,
                 )}
             >
                 <TableVirtuoso

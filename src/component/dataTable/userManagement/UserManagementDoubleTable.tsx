@@ -56,6 +56,16 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
         </Button>
     )
 
+    // to align the left and right table
+    const toolbarRight: ReactNode = (
+        <Button
+            size={"sm"}
+            className={"opacity-0 cursor-default"}
+        >
+            Nothing button
+        </Button>
+    )
+
     const changeRoleOfUser = async (userIndex: number, roleIds: string[]) => {
         const userId = usersDataRaw[userIndex].id
         const response = await setRolesAction({
@@ -128,6 +138,7 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
                 classNameRight={classNameRight}
                 onDoubleClickLeft={setLeftSelectedWidthIndex}
                 onChangeSelectedRight={changeRoleOfUser}
+                toolbarRight={toolbarRight}
                 enableColumnVisibilityRight={true}
             />
         </div>
