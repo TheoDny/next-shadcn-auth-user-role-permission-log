@@ -12,6 +12,7 @@ import { ReactNode, useState } from "react"
 import { setRolesAction } from "@/action/user.action"
 import { toast } from "sonner"
 import { RoleSmall } from "@/type/role.type"
+import { handleErrorAction } from "@/util/error.util"
 
 type props = {
     usersData: UserRole[]
@@ -72,16 +73,7 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
             userId: userId,
             roleIds: roleIds,
         })
-        if (response.validationErrors) {
-            toast.error(nextSafeActionValiationErrorToString(response.validationErrors))
-            console.error(response.validationErrors)
-        } else if (response.serverError) {
-            toast.error(response.serverError)
-            console.error(response.serverError)
-        } else if (!response.data) {
-            toast.error("Une erreur est survenue")
-            console.error("Une erreur est survenue")
-        } else {
+        if (handleErrorAction(response, toast)) {
             setUsersDataRaw((prevState) => {
                 const newState = prevState.slice()
                 newState[userIndex] = response.data as UserRole

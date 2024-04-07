@@ -49,8 +49,10 @@ export const authOptions: AuthOptions = {
 
                 return {
                     id: userInfo.id,
-                    name: userInfo.firstname,
+                    firstname: userInfo.firstname,
                     lastname: userInfo.lastname,
+                    email: userInfo.email,
+                    isActive: userInfo.isActive,
                     Roles: userInfo.Roles,
                     Permissions: userInfo.Permissions,
                 }
@@ -65,6 +67,8 @@ export const authOptions: AuthOptions = {
                     id: token.id,
                     firstname: token.firstname,
                     lastname: token.lastname,
+                    email: token.email,
+                    isActive: token.isActive,
                     Roles: token.Roles,
                     Permissions: token.Permissions,
                 },
@@ -87,6 +91,8 @@ export const authOptions: AuthOptions = {
                 id: userInfo.id,
                 firstname: userInfo.firstname,
                 lastname: userInfo.lastname,
+                email: userInfo.email,
+                isActive: userInfo.isActive,
                 Roles: userInfo.Roles,
                 Permissions: userInfo.Permissions,
                 iat: token.iat,

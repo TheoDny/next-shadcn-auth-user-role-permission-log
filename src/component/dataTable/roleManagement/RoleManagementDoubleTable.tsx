@@ -12,6 +12,7 @@ import { DialogAddEditRole } from "@/component/dataTable/roleManagement/dialog/D
 import { ReactNode, useState } from "react"
 import { setPermissionsAction } from "@/action/role.action"
 import { toast } from "sonner"
+import { handleErrorAction } from "@/util/error.util"
 
 type props = {
     rolesData: RoleFull[]
@@ -63,16 +64,7 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
             roleId: roleId,
             permissionIds: permissionIds,
         })
-        if (response.validationErrors) {
-            toast.error(nextSafeActionValiationErrorToString(response.validationErrors))
-            console.error(response.validationErrors)
-        } else if (response.serverError) {
-            toast.error(response.serverError)
-            console.error(response.serverError)
-        } else if (!response.data) {
-            toast.error("Une erreur est survenue")
-            console.error("Une erreur est survenue")
-        } else {
+        if (handleErrorAction(response, toast)) {
             setRolesDataRaw((prevState) => {
                 const newState = prevState.slice()
                 newState[roleIndex] = response.data as RoleFull

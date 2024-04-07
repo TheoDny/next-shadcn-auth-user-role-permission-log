@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Form, FormItem, FormLabel, FormControl, FormField, FormMessage } from "@/component/ui/form"
@@ -7,7 +8,9 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { addUserAction, editUserAction } from "@/action/user.action"
 import { UserRole } from "@/type/user.type"
-import { addUserZod } from "@/zod/user.zod" // replace with your actual import path
+import { addUserZod } from "@/zod/user.zod"
+import { toast } from "sonner"
+import { handleErrorAction } from "@/util/error.util"
 
 type props = {
     defaultValues?: {
@@ -17,7 +20,7 @@ type props = {
         email: string
         isActive: boolean
     }
-    afterSubmit: (value: UserRole) => any
+    afterSubmit?: (value: UserRole) => any
 }
 
 const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
@@ -31,14 +34,8 @@ const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
     const addUser = async (values: z.infer<typeof addUserZod>) => {
         setLoading(true)
         const response = await addUserAction(values)
-        if (response.validationErrors) {
-            console.error(response.serverError)
-        } else if (response.serverError) {
-            console.error(response.serverError)
-        } else if (!response.data) {
-            console.error("Une erreur est survenue")
-        } else {
-            afterSubmit(response.data)
+        if (handleErrorAction(response, toast) && response.data) {
+            afterSubmit && afterSubmit(response.data)
         }
         setLoading(false)
     }
@@ -47,14 +44,8 @@ const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
         if (!defaultValues) return console.error("Aucun userId fourni")
         setLoading(true)
         const response = await editUserAction({ userId: defaultValues.id, ...values })
-        if (response.validationErrors) {
-            console.error(response.serverError)
-        } else if (response.serverError) {
-            console.error(response.serverError)
-        } else if (!response.data) {
-            console.error("Une erreur est survenue")
-        } else {
-            afterSubmit(response.data)
+        if (handleErrorAction(response, toast) && response.data) {
+            afterSubmit && afterSubmit(response.data)
         }
         setLoading(false)
     }

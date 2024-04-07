@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { addRoleAction, editRoleAction } from "@/action/role.action"
 import { RoleFull } from "@/type/role.type"
 import { addRoleZod } from "@/zod/role.zod"
+import { handleErrorAction } from "@/util/error.util"
+import { toast } from "sonner"
 
 type props = {
     defaultValues?: {
@@ -30,13 +32,7 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
         setLoading(true)
 
         const response = await addRoleAction(values)
-        if (response.validationErrors) {
-            console.error(response.validationErrors)
-        } else if (response.serverError) {
-            console.error(response.serverError)
-        } else if (!response.data?.id) {
-            console.error("Une erreur est survenue")
-        } else {
+        if (handleErrorAction(response, toast) && response.data) {
             afterSubmit(response.data)
         }
 
@@ -48,13 +44,7 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
         setLoading(true)
 
         const response = await editRoleAction({ roleId: defaultValues.id, ...values })
-        if (response.validationErrors) {
-            console.error(response.validationErrors)
-        } else if (response.serverError) {
-            console.error(response.serverError)
-        } else if (!response.data) {
-            console.error("Une erreur est survenue")
-        } else {
+        if (handleErrorAction(response, toast) && response.data) {
             afterSubmit(response.data)
         }
 
