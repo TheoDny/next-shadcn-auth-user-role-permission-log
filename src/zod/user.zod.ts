@@ -17,14 +17,13 @@ export const activeDesactiveUser = z.object({
     userId: z.string().cuid(),
 })
 
-const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$/
+const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@!%*?&.+#:;,€£$])[A-Za-z\d@!%*?&.+#:;,€£$]{8,64}$/
 export const resetPasswordZod = z
     .object({
         token: z.string().optional(),
-        newPassword: z.string().refine((value) => passwordRegex.test(value), {
+        newPassword: z.string().regex(passwordRegex, {
             message:
-                "Le mot de passe doit être entre 8 et 64 caractères et contenir au moins une majuscule, un chiffre et un caractère spécial (@$!%*?&)",
-            path: ["newPassword"],
+                "Le mot de passe doit être entre 8 et 64 caractères et contenir au moins une majuscule, un chiffre et un caractère spécial (@!%*?&.+#:;,€£$)",
         }),
         repeatNewPassword: z.string(),
     })

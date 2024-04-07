@@ -33,7 +33,7 @@ export const NavigationItem = ({
             {"path" in item ? (
                 <Link
                     href={item.path}
-                    className={`flex flex-row text-base items-center p-2 rounded-lg hover:bg-secondary ${
+                    className={`flex flex-row text-base items-center p-1 rounded-lg hover:bg-secondary ${
                         item.path === pathname ? "bg-secondary" : ""
                     }`}
                 >
