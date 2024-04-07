@@ -69,7 +69,7 @@ export function DataTable<TData, TValue>({
     const [globalFilter, setGlobalFilter] = useState("")
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
-    const filterWithAccents: FilterFn<any> = (row, columnId: string, filterValue: string) => {
+    const filterWithAccents: FilterFn<TData[]> = (row, columnId: string, filterValue: string) => {
         const cellValue = row.getValue<string | null>(columnId)
         const normalizedCellValue = removeDiacritics(String(cellValue).toLowerCase())
         const normalizedFilterValue = removeDiacritics(filterValue.toLowerCase())
@@ -106,41 +106,6 @@ export function DataTable<TData, TValue>({
     const { rows } = table.getRowModel()
     let selectedDoubleClickRef = useRef<string>("")
 
-    const dropDonwColumnVisibility = useMemo<any>(
-        () =>
-            enableColumnVisibility && (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            variant="outline"
-                            className="ml-auto"
-                            size={"sm"}
-                        >
-                            Visibilité
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value: any) => column.toggleVisibility(!!value)}
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            ),
-        [table, enableColumnVisibility],
-    )
-
     return (
         <div
             className={cn("grow", className?.containerDiv)}
@@ -155,7 +120,36 @@ export function DataTable<TData, TValue>({
                         className={"max-w-sm " + className?.filter?.input}
                         sizeElement={"sm"}
                     />
-                    {enableColumnVisibility && dropDonwColumnVisibility}
+                    {enableColumnVisibility && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className="ml-auto"
+                                    size={"sm"}
+                                >
+                                    Visibilité
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                {table
+                                    .getAllColumns()
+                                    .filter((column) => column.getCanHide())
+                                    .map((column) => {
+                                        return (
+                                            <DropdownMenuCheckboxItem
+                                                key={column.id}
+                                                className="capitalize"
+                                                checked={column.getIsVisible()}
+                                                onCheckedChange={(value: any) => column.toggleVisibility(!!value)}
+                                            >
+                                                {column.id}
+                                            </DropdownMenuCheckboxItem>
+                                        )
+                                    })}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </div>
                 <div className={"flex-grow text-right space-x-1 " + className?.toolbar}>{toolbar && toolbar}</div>
             </div>

@@ -55,7 +55,7 @@ export default function DoubleDataTable<
     enableColumnVisibilityRight,
 }: props<L, FL, R, FR>) {
     const [leftSelected, setLeftSelected] = useState({})
-    const [rightSelected, setRightSelected] = useState<any>({})
+    const [rightSelected, setRightSelected] = useState({})
 
     const elementRef = useRef<HTMLDivElement>(null)
     const [isWrapped, setIsWrapped] = useState(false)
