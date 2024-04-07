@@ -2,7 +2,6 @@ import { prisma } from "@/lib/prisma"
 import { includeUserFull, includeUserRole, UserFull, UserInfoFull, UserRole } from "@/type/user.type"
 import { PermissionSmall } from "@/type/permission.type"
 import { addLog } from "@/service/log.service"
-import jwt, { JwtPayload } from "jsonwebtoken"
 import { hash } from "bcryptjs"
 import { sendEmailNewUser } from "@/service/mail.service"
 
@@ -149,12 +148,7 @@ export const editUser = async (
     return editedUser
 }
 
-export const resetPassword = async (token: string, newPassword: string) => {
-    const decodedToken: JwtPayload | string = jwt.verify(token, process.env.APP_SECRET ?? "secret")
-    if (!decodedToken || typeof decodedToken === "string" || !newPassword || !decodedToken.idUser) {
-        throw new Error("Token invalid")
-    }
-    const idUser = decodedToken.idUser as string
+export const resetPassword = async (idUser: string, newPassword: string) => {
     await prisma.user.update({
         where: {
             id: idUser,

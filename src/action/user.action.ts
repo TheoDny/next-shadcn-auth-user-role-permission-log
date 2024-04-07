@@ -15,6 +15,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { checkPermissions } from "@/util/auth.util"
 import { idAdminAccount } from "../../prisma/dataSeed"
+import jwt, { JwtPayload } from "jsonwebtoken"
 
 export const setRolesAction = action(
     z.object({
@@ -78,11 +79,23 @@ export const editUserAction = action(editUserZod, async ({ userId, firstname, la
 
 export const resetPasswordAction = action(
     z.object({
-        token: z.string(),
+        token: z.string().optional(),
         newPassword: z.string(),
     }),
     async ({ token, newPassword }) => {
-        return await resetPassword(token, newPassword)
+        if (!token) {
+            const session = await getServerSession(authOptions)
+            if (!session || !session.user?.id) {
+                throw new Error("Unauthorized: No active session found.")
+            }
+            return await resetPassword(session.user.id, newPassword)
+        } else {
+            const decodedToken: JwtPayload | string = jwt.verify(token, process.env.APP_SECRET ?? "secret")
+            if (!decodedToken || typeof decodedToken === "string" || !decodedToken.idUser) {
+                throw new Error("Invalid token: Token is either missing or invalid.")
+            }
+            return await resetPassword(decodedToken.idUser as string, newPassword)
+        }
     },
 )
 
