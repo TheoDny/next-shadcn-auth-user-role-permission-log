@@ -10,6 +10,7 @@ import { useState } from "react"
 
 const LoginForm = () => {
     const [loading, setLoading] = useState(false)
+    const [visilityPassword, setVisilityPassword] = useState(false)
 
     const formSchema = z.object({
         email: z.string().email({
@@ -61,7 +62,12 @@ const LoginForm = () => {
                         <FormItem>
                             <FormLabel>Mot de passe</FormLabel>
                             <FormControl>
-                                <Input {...field} />
+                                <Input
+                                    type={visilityPassword ? "text" : "password"}
+                                    setVisibility={setVisilityPassword}
+                                    visibility={visilityPassword}
+                                    autoComplete={"password"}
+                                    {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

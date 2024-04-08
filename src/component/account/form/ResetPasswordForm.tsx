@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Form, FormItem, FormLabel, FormControl, FormField, FormMessage } from "@/component/ui/form"
 import { Input } from "@/component/ui/input"
@@ -14,6 +14,8 @@ import { resetPasswordZod } from "@/zod/user.zod"
 
 const ResetPasswordForm = () => {
     const [loading, setLoading] = useState(false)
+    const [visilityNewPassword, setVisilityNewPassword] = useState(false)
+    const [visilityRepeatNewPassword, setVisilityRepeatNewPassword] = useState(false)
 
     const form = useForm<z.infer<typeof resetPasswordZod>>({
         resolver: zodResolver(resetPasswordZod),
@@ -35,6 +37,10 @@ const ResetPasswordForm = () => {
         setLoading(false)
     }
 
+    useEffect(() => {
+
+    }, [])
+
     return (
         <Form {...form}>
             <form
@@ -48,7 +54,11 @@ const ResetPasswordForm = () => {
                         <FormItem>
                             <FormLabel>Nouveau mot de passe</FormLabel>
                             <FormControl>
-                                <Input {...field} />
+                                <Input type={visilityNewPassword ? "text" : "password"}
+                                       setVisibility={setVisilityNewPassword}
+                                       visibility={visilityNewPassword}
+                                       autoComplete={"new-password"}
+                                       {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -61,7 +71,12 @@ const ResetPasswordForm = () => {
                         <FormItem>
                             <FormLabel>Répéter le mot de passe</FormLabel>
                             <FormControl>
-                                <Input {...field} />
+                                <Input
+                                    type={visilityRepeatNewPassword ? "text" : "password"}
+                                    setVisibility={setVisilityRepeatNewPassword}
+                                    visibility={visilityRepeatNewPassword}
+                                    autoComplete={"new-password"}
+                                    {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

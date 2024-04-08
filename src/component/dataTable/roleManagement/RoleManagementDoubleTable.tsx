@@ -58,6 +58,16 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
         </Button>
     )
 
+    // to align the left and right table
+    const toolbarRight: ReactNode = (
+        <Button
+            size={"sm"}
+            className={"opacity-0 cursor-default"}
+        >
+            Nothing button
+        </Button>
+    )
+
     const changePermissionOfRole = async (roleIndex: number, permissionIds: string[]) => {
         const roleId = rolesDataRaw[roleIndex].id
         const response = await setPermissionsAction({
@@ -120,6 +130,7 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
                 classNameRight={classNameRight}
                 onDoubleClickLeft={setLeftSelectedWidthIndex}
                 onChangeSelectedRight={changePermissionOfRole}
+                toolbarRight={toolbarRight}
                 enableColumnVisibilityRight={true}
             />
         </div>
