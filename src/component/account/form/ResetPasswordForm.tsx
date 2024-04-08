@@ -17,6 +17,10 @@ const ResetPasswordForm = () => {
 
     const form = useForm<z.infer<typeof resetPasswordZod>>({
         resolver: zodResolver(resetPasswordZod),
+        defaultValues: {
+            newPassword: "",
+            repeatNewPassword: "",
+        },
     })
 
     const handleResetPassword = async (values: z.infer<typeof resetPasswordZod>) => {
@@ -25,6 +29,7 @@ const ResetPasswordForm = () => {
         const response = await resetPasswordAction({ ...values })
         if (handleErrorAction(response, toast) && response.data) {
             toast.success("Le mot de passe a été modifié avec succès")
+            form.reset()
         }
 
         setLoading(false)

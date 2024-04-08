@@ -29,9 +29,9 @@ const MyAccount = ({ infoUser }: Props) => {
                     {infoUser.Roles.map((role, index) => (
                         <li
                             key={index}
-                            className="mb-4 pr-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
+                            className="mb-4 pr-3 grid grid-cols-[15px_1fr] items-start pb-4 last:mb-0 last:pb-0"
                         >
-                            <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
+                            <span className="flex flex-wrap h-2 w-2 translate-y-1 rounded-full bg-primary" />
                             <div className="space-y-1">
                                 <p className="text-sm font-medium leading-none">{role.name}</p>
                                 <p className="text-sm text-muted-foreground">{role.description}</p>
@@ -48,9 +48,9 @@ const MyAccount = ({ infoUser }: Props) => {
                     {infoUser.Permissions.map((permission, index) => (
                         <li
                             key={index}
-                            className="mb-4 pr-4 grid grid-cols-[25px_1fr] items-start last:mb-0 last:pb-0"
+                            className="mb-4 pr-3 grid grid-cols-[15px_1fr] items-start last:mb-0 last:pb-0"
                         >
-                            <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
+                            <span className="flex flex-wrap h-2 w-2 translate-y-1 rounded-full bg-primary" />
                             <div className="space-y-1">
                                 <p className="text-sm font-medium leading-none">{permission.name}</p>
                                 <p className="text-sm text-muted-foreground">{permission.name}</p>
