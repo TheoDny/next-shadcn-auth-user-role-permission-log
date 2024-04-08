@@ -2,7 +2,6 @@
 
 import React from "react"
 import Link from "next/link"
-import { cn } from "@/lib/utils"
 import { ModeToggle } from "@/component/ui/select-theme"
 import { Session } from "next-auth"
 import { getInitials } from "@/util/diverse.util"
@@ -26,8 +25,8 @@ const Header = async ({ session }: props) => {
                     </Link>
                 </div>
 
-                <div className="flex flex-row space-x-3">
-                    <div className="hidden h-8 w-8 rounded-full bg-primary text-primary-foreground md:flex items-center justify-center text-center">
+                <div className="flex flex-row items-center space-x-3">
+                    <div className="hidden h-9 w-9 rounded-full bg-primary text-primary-foreground md:flex items-center justify-center text-center">
                         <span className="font-semibold text-sm">{initials}</span>
                     </div>
                     <ModeToggle />
