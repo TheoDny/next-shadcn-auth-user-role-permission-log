@@ -9,6 +9,8 @@ import { usePathname } from "next/navigation"
 import Image from "next/image"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
+import { Button } from "@/component/ui/button"
+import { signOut } from "next-auth/react"
 
 const SideNav = () => {
     const pathname = usePathname()
@@ -25,7 +27,7 @@ const SideNav = () => {
     }, [resolvedTheme])
 
     return (
-        <div className="md:w-52 z-40 bg-background text-foreground h-screen flex-1 fixed border-r border-accent hidden md:flex">
+        <div className="md:w-52 z-40 bg-background text-foreground h-screen flex-1 fixed border-r border-accent hidden md:flex flex-col justify-between">
             <div className="flex flex-col space-y-2 w-full">
                 <Link
                     href="/"
@@ -52,18 +54,14 @@ const SideNav = () => {
                         )
                     })}
                 </div>
-                <div>
-                    {/*<Link*/}
-                    {/*    href={item.path}*/}
-                    {/*    className={`flex flex-row space-x-4 items-center p-2 rounded-lg hover:bg-zinc-100 ${*/}
-                    {/*        item.path === pathname ? "bg-zinc-100" : ""*/}
-                    {/*    }`}*/}
-                    {/*>*/}
-                    {/*<span className="font-semibold text-lg flex">*/}
-                    {/*    {item.title}*/}
-                    {/*</span>*/}
-                    {/*</Link>*/}
-                </div>
+            </div>
+            <div className="flex flex-col space-y-1 md:p-3 p-1  border-t border-accent">
+                <Button
+                    onClick={() => signOut()}
+                    size="sm"
+                >
+                    Déconnexion
+                </Button>
             </div>
         </div>
     )
