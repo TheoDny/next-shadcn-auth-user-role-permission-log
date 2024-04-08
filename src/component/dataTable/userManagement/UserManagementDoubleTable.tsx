@@ -13,6 +13,7 @@ import { setRolesAction } from "@/action/user.action"
 import { toast } from "sonner"
 import { RoleSmall } from "@/type/role.type"
 import { handleErrorAction } from "@/util/error.util"
+import { MdAccountCircle, MdNoAccounts } from "react-icons/md"
 
 type props = {
     usersData: UserRole[]
@@ -218,7 +219,12 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
             )
         },
         cell: ({ cell }) => {
-            const isActive = cell.getValue() === "Oui" ? "Active" : "Inactive"
+            const isActive =
+                cell.getValue() === "Oui" ? (
+                    <MdAccountCircle className="text-green-600 w-6 h-6" />
+                ) : (
+                    <MdNoAccounts className="text-destructive w-6 h-6" />
+                )
             return <span>{isActive}</span>
         },
     },
