@@ -225,7 +225,7 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
                 ) : (
                     <MdNoAccounts className="text-destructive w-6 h-6" />
                 )
-            return <span>{isActive}</span>
+            return <span className="flex justify-center">{isActive}</span>
         },
     },
     {
