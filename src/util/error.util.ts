@@ -14,20 +14,20 @@ export const handleErrorAction = (
         serverError?: string | undefined
         validationErrors?: Partial<{ [k: string]: string[] }> | undefined
     },
-    toast: {
+    toast?: {
         error: (message: string | ReactNode) => any
     },
 ): boolean => {
     if (response.validationErrors) {
-        toast.error(nextSafeActionValiationErrorToString(response.validationErrors))
+        toast && toast.error(nextSafeActionValiationErrorToString(response.validationErrors))
         console.error(response.validationErrors)
         return false
     } else if (response.serverError) {
-        toast.error(response.serverError)
+        toast && toast.error(response.serverError)
         console.error(response.serverError)
         return false
     } else if (!response.data) {
-        toast.error("Une erreur est survenue")
+        toast && toast.error("Une erreur est survenue")
         console.error("Une erreur est survenue")
         return false
     }
