@@ -1,13 +1,5 @@
 "use server"
-import {
-    activeUser,
-    addUser,
-    disabledUser,
-    editUser,
-    resetPassword,
-    sendMailPasswordReset,
-    setRoles,
-} from "@/service/user.service"
+import { addUser, editUser, resetPassword, sendMailPasswordReset, setRoles } from "@/service/user.service"
 import { z } from "zod"
 import { action } from "@/lib/safe-actions"
 import { activeDesactiveUser, addUserZod, editUserZod } from "@/zod/user.zod"
@@ -35,37 +27,16 @@ export const setRolesAction = action(
     },
 )
 
-export const disabledUserAction = action(activeDesactiveUser, async ({ userId }) => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_user"])) {
-        throw new Error("Unauthorized")
-    }
-    if (userId === idAdminAccount) {
-        throw new Error("La désactivation du compte Administrateur n'est autorisé")
-    }
-
-    return await disabledUser(userId)
-})
-
-export const activeUserAction = action(activeDesactiveUser, async ({ userId }) => {
-    const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_user"])) {
-        throw new Error("Unauthorized")
-    }
-
-    return await activeUser(userId)
-})
-
-export const addUserAction = action(addUserZod, async ({ firstname, lastname, email }) => {
+export const addUserAction = action(addUserZod, async ({ firstname, lastname, email, isActive }) => {
     const session = await getServerSession(authOptions)
     if (!session || !checkPermissions(session, ["gestion_role"])) {
         throw new Error("Unauthorized")
     }
 
-    return await addUser(firstname, lastname, email)
+    return await addUser(firstname, lastname, email, isActive)
 })
 
-export const editUserAction = action(editUserZod, async ({ userId, firstname, lastname, email }) => {
+export const editUserAction = action(editUserZod, async ({ userId, firstname, lastname, email, isActive }) => {
     const session = await getServerSession(authOptions)
     if (!session || (!checkPermissions(session, ["gestion_role"]) && userId !== session.user.id)) {
         throw new Error("Unauthorized")
@@ -74,7 +45,7 @@ export const editUserAction = action(editUserZod, async ({ userId, firstname, la
         throw new Error("L'édition du compte Administrateur n'est autorisé")
     }
 
-    return await editUser(userId, firstname, lastname, email)
+    return await editUser(userId, firstname, lastname, email, isActive)
 })
 
 export const resetPasswordAction = action(

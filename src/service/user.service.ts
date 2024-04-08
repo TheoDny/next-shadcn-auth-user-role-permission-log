@@ -66,47 +66,19 @@ export const setRoles = async (userId: string, roleIds: string[]): Promise<UserR
     return user
 }
 
-export const disabledUser = async (userId: string) => {
-    const user = await prisma.user.update({
-        where: { id: userId },
-        data: {
-            isActive: false,
-        },
-        include: includeUserRole,
-    })
-
-    addLog(
-        "USER_DEACTIVATE",
-        `Désactivation de l'utilisateur ${user.lastname.toUpperCase()} ${user.firstname} (${user.id})`,
-    )
-
-    return user
-}
-
-export const activeUser = async (userId: string) => {
-    const user = await prisma.user.update({
-        where: { id: userId },
-        data: {
-            isActive: true,
-        },
-        include: includeUserRole,
-    })
-
-    addLog(
-        "USER_ACTIVATE",
-        `Activation de l'utilisateur ${user.lastname.toUpperCase()} ${user.firstname} (${user.id})`,
-    )
-
-    return user
-}
-
-export const addUser = async (firstname: string, lastname: string, email: string): Promise<UserRole> => {
+export const addUser = async (
+    firstname: string,
+    lastname: string,
+    email: string,
+    isActive?: boolean,
+): Promise<UserRole> => {
     const newUser = await prisma.user.create({
         data: {
             firstname: firstname,
             lastname: lastname,
             email: email,
             password: "to_define_with_email_send",
+            isActive: isActive,
         },
         include: includeUserRole,
     })
@@ -129,6 +101,7 @@ export const editUser = async (
     firstname: string,
     lastname: string,
     email: string,
+    isActive?: boolean,
 ): Promise<UserRole> => {
     const editedUser = await prisma.user.update({
         where: { id: userId },
@@ -136,6 +109,7 @@ export const editUser = async (
             firstname: firstname,
             lastname: lastname,
             email: email,
+            isActive: isActive,
         },
         include: includeUserRole,
     })

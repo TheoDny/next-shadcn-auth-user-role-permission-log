@@ -17,7 +17,6 @@ const MyAccount = ({ infoUser }: Props) => {
                         firstname: infoUser.firstname,
                         lastname: infoUser.lastname,
                         email: infoUser.email,
-                        isActive: infoUser.isActive,
                     }}
                 />
             </BasicCard>

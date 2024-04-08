@@ -4,6 +4,7 @@ export const addUserZod = z.object({
     firstname: z.string().min(1).max(48, "Le prénom doit être compris entre 1 et 48 caractères"),
     lastname: z.string().min(1).max(48, "Le nom doit être compris entre 1 et 48 caractères"),
     email: z.string().email("L'email doit être valide"),
+    isActive: z.boolean().optional(),
 })
 
 export const editUserZod = z.object({
@@ -11,6 +12,7 @@ export const editUserZod = z.object({
     firstname: z.string().min(1).max(48, "Le prénom doit être compris entre 1 et 48 caractères"),
     lastname: z.string().min(1).max(48, "Le nom doit être compris entre 1 et 48 caractères"),
     email: z.string().email("L'email doit être valide"),
+    isActive: z.boolean().optional(),
 })
 
 export const activeDesactiveUser = z.object({

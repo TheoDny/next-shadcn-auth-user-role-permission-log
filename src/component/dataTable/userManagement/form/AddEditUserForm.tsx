@@ -11,6 +11,7 @@ import { UserRole } from "@/type/user.type"
 import { addUserZod } from "@/zod/user.zod"
 import { toast } from "sonner"
 import { handleErrorAction } from "@/util/error.util"
+import { Switch } from "@/component/ui/switch"
 
 type props = {
     defaultValues?: {
@@ -18,7 +19,7 @@ type props = {
         firstname: string
         lastname: string
         email: string
-        isActive: boolean
+        isActive?: boolean
     }
     afterSubmit?: (value: UserRole) => any
 }
@@ -95,6 +96,24 @@ const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
                         </FormItem>
                     )}
                 />
+                {(defaultValues?.isActive !== undefined || !defaultValues) && (
+                    <FormField
+                        control={form.control}
+                        name="isActive"
+                        render={({ field }) => (
+                            <FormItem className="flex justify-between">
+                                <FormLabel className="leading-loose w-full">Actif</FormLabel>
+                                <FormControl>
+                                    <Switch
+                                        checked={!defaultValues ? true : Boolean(field.value)}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                )}
                 <ButtonLoading
                     className="w-full !mt-6"
                     type="submit"
