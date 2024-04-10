@@ -1,21 +1,18 @@
 import { prisma } from "@/lib/prisma"
 import {
-    selectUserWithPwdIncludeRoleSmallIncludePermissionSmall,
-    UserInfoFull,
-    UserIncludeRoleSmall,
-    UserWithPwdIncludeRoleSmallIncludePermissionSmall,
-    selectUserIncludeRoleSmall,
-    UserInfoFullMedium,
-    UserIncludeRoleSmallIncludePermissionSmall,
-    UserIncludeRoleMediumIncludePermissionMedium,
     selectUserIncludeRoleMediumIncludePermissionMedium,
+    selectUserIncludeRoleSmall,
+    selectUserWithPwdIncludeRoleSmallIncludePermissionSmall,
+    UserIncludeRoleMediumIncludePermissionMedium,
+    UserIncludeRoleSmall,
+    UserInfoFull,
+    UserInfoFullMedium,
+    UserWithPwdIncludeRoleSmallIncludePermissionSmall,
 } from "@/type/user.type"
 import { PermissionMedium, PermissionSmall } from "@/type/permission.type"
 import { addLog } from "@/service/log.service"
 import { hash } from "bcryptjs"
 import { sendEmailNewUser } from "@/service/mail.service"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
 
 export const getUserFullInfoFromEmailOrId = async (
     emailOrId: string,

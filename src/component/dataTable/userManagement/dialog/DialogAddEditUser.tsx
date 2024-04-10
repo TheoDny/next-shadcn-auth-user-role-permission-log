@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/component/ui/dialog"
-import { UserIncludeRoleSmall } from "@/type/user.type"
 import AddEditUserForm from "@/component/dataTable/userManagement/form/AddEditUserForm"
+import { UserIncludeRoleSmall } from "@/type/user.type"
 
 type props = {
     show: boolean

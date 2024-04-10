@@ -1,5 +1,5 @@
 "use client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/component/ui/card"
+import { Card, CardContent, CardHeader } from "@/component/ui/card"
 import LoginForm from "@/component/login/LoginForm"
 import Image from "next/image"
 

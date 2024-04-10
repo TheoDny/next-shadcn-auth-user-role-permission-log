@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { Form, FormItem, FormLabel, FormControl, FormField, FormMessage } from "@/component/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/component/ui/form"
 import { Input } from "@/component/ui/input"
 import { ButtonLoading } from "@/component/ui/button-loading"
 import { z } from "zod"

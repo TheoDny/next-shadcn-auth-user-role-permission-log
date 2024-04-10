@@ -1,6 +1,6 @@
 "use client"
 import React, { FC } from "react"
-import { DataTable, DataTableStyle } from "@/component/dataTable/DataTable"
+import { DataTable } from "@/component/dataTable/DataTable"
 import { LogUserFormatted } from "@/type/log.type"
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/component/ui/button"

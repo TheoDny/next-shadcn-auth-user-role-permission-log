@@ -2,7 +2,7 @@
 import { addUser, editUser, resetPassword, sendMailPasswordReset, setRoles } from "@/service/user.service"
 import { z } from "zod"
 import { action } from "@/lib/safe-actions"
-import { activeDesactiveUser, addUserZod, editUserZod } from "@/zod/user.zod"
+import { addUserZod, editUserZod } from "@/zod/user.zod"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { checkPermissions } from "@/util/auth.util"

@@ -1,8 +1,6 @@
-import { SessionUser } from "next-auth"
 import AddEditUserForm from "@/component/dataTable/userManagement/form/AddEditUserForm"
 import ResetPasswordForm from "@/component/account/form/ResetPasswordForm"
 import { BasicCard } from "@/component/card/basicCard"
-import { permissions } from "@/../prisma/dataSeed"
 import { UserInfoFullMedium } from "@/type/user.type"
 
 type Props = {

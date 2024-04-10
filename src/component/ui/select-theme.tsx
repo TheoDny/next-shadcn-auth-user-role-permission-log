@@ -1,6 +1,6 @@
 "use client"
 
-import { MdLightMode, MdDarkMode } from "react-icons/md"
+import { MdDarkMode, MdLightMode } from "react-icons/md"
 
 import { Button } from "@/component/ui/button"
 import {

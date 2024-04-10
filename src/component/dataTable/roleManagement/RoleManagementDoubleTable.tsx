@@ -1,6 +1,6 @@
 "use client"
 import dayjs from "dayjs"
-import { RoleFormatted, RoleIncludePermissionSmall, RoleSmallIncludePermissionSmall } from "@/type/role.type"
+import { RoleFormatted, RoleIncludePermissionSmall } from "@/type/role.type"
 import DoubleDataTable, { ConfigCustomTable } from "@/component/dataTable/DoubleDataTable"
 import { Permission } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"

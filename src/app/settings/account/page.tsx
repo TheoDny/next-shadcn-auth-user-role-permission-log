@@ -1,4 +1,4 @@
-import { getServerSession, SessionUser } from "next-auth"
+import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import MyAccount from "@/component/account/MyAccount"
 import { getAccountInfo } from "@/service/user.service"

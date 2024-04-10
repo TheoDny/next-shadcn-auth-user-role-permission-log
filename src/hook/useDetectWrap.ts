@@ -1,4 +1,4 @@
-import { useEffect, RefObject, Dispatch, SetStateAction } from "react"
+import { Dispatch, RefObject, SetStateAction, useEffect } from "react"
 
 const useDetectWrap = (setIsWrapped: Dispatch<SetStateAction<boolean>>, elementRef: RefObject<HTMLElement>) => {
     useEffect(() => {

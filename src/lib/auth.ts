@@ -1,9 +1,8 @@
 import { compare } from "bcryptjs"
-import { AuthOptions, Session } from "next-auth"
+import { AuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { UserInfoFull } from "@/type/user.type"
 import { getUserFullInfoFromEmailOrId } from "@/service/user.service"
-import { PermissionSmall } from "@/type/permission.type"
 import { addLog } from "@/service/log.service"
 
 export const authOptions: AuthOptions = {
