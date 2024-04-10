@@ -1,11 +1,16 @@
 import { prisma } from "@/lib/prisma"
-import { includeRolePermissions, RoleFull, RoleSmall, selectRoleSmall } from "@/type/role.type"
+import {
+    RoleSmall,
+    selectRoleSmall,
+    selectRoleIncludePermissionSmall,
+    RoleIncludePermissionSmall,
+} from "@/type/role.type"
 import { Role } from "@prisma/client"
 import { addLog } from "@/service/log.service"
 
-export const getAllRolePermission = async (): Promise<RoleFull[]> => {
+export const getAllRolePermission = async (): Promise<RoleIncludePermissionSmall[]> => {
     return prisma.role.findMany({
-        include: includeRolePermissions,
+        select: selectRoleIncludePermissionSmall,
     })
 }
 
@@ -19,7 +24,10 @@ export const getAllRoleSmall = async (): Promise<RoleSmall[]> => {
     })
 }
 
-export const setPermissions = async (roleId: string, permissionIds: string[]): Promise<RoleFull> => {
+export const setPermissions = async (
+    roleId: string,
+    permissionIds: string[],
+): Promise<RoleIncludePermissionSmall> => {
     const role = await prisma.role.update({
         where: { id: roleId },
         data: {
@@ -29,7 +37,7 @@ export const setPermissions = async (roleId: string, permissionIds: string[]): P
                 }),
             },
         },
-        include: includeRolePermissions,
+        select: selectRoleIncludePermissionSmall,
     })
 
     addLog("ROLE_EDIT", `Edition des permissions du role ${role.name} (${role.id})`)
@@ -37,13 +45,13 @@ export const setPermissions = async (roleId: string, permissionIds: string[]): P
     return role
 }
 
-export const addRole = async (name: string, description?: string): Promise<RoleFull> => {
+export const addRole = async (name: string, description?: string): Promise<RoleIncludePermissionSmall> => {
     const newRole = await prisma.role.create({
         data: {
             name: name,
             description: description ?? undefined,
         },
-        include: includeRolePermissions,
+        select: selectRoleIncludePermissionSmall,
     })
 
     addLog("ROLE_ADD", `Ajout du role ${newRole.name} (${newRole.id})`)
@@ -51,7 +59,11 @@ export const addRole = async (name: string, description?: string): Promise<RoleF
     return newRole
 }
 
-export const editRole = async (roleId: string, name: string, description?: string): Promise<RoleFull> => {
+export const editRole = async (
+    roleId: string,
+    name: string,
+    description?: string,
+): Promise<RoleIncludePermissionSmall> => {
     const editedRole = await prisma.role.update({
         where: {
             id: roleId,
@@ -60,7 +72,7 @@ export const editRole = async (roleId: string, name: string, description?: strin
             name: name,
             description: description ?? undefined,
         },
-        include: includeRolePermissions,
+        select: selectRoleIncludePermissionSmall,
     })
 
     addLog("ROLE_EDIT", `Edition du role ${editedRole.name} (${editedRole.id})`)

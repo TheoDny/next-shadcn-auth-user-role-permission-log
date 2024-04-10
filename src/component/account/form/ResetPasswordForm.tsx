@@ -37,9 +37,7 @@ const ResetPasswordForm = () => {
         setLoading(false)
     }
 
-    useEffect(() => {
-
-    }, [])
+    useEffect(() => {}, [])
 
     return (
         <Form {...form}>
@@ -54,11 +52,13 @@ const ResetPasswordForm = () => {
                         <FormItem>
                             <FormLabel>Nouveau mot de passe</FormLabel>
                             <FormControl>
-                                <Input type={visilityNewPassword ? "text" : "password"}
-                                       setVisibility={setVisilityNewPassword}
-                                       visibility={visilityNewPassword}
-                                       autoComplete={"new-password"}
-                                       {...field} />
+                                <Input
+                                    type={visilityNewPassword ? "text" : "password"}
+                                    setVisibility={setVisilityNewPassword}
+                                    visibility={visilityNewPassword}
+                                    autoComplete={"new-password"}
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -76,7 +76,8 @@ const ResetPasswordForm = () => {
                                     setVisibility={setVisilityRepeatNewPassword}
                                     visibility={visilityRepeatNewPassword}
                                     autoComplete={"new-password"}
-                                    {...field} />
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

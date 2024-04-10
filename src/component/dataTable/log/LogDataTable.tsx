@@ -15,6 +15,9 @@ const LogTable: FC<LogTableProps> = ({ dataLogUser }) => {
         <DataTable
             data={dataLogUser}
             columns={columnsLog}
+            className={{
+                containerTableDiv: "h-[calc(100dvh-120px)]",
+            }}
         />
     )
 }

@@ -2,21 +2,23 @@ import { SessionUser } from "next-auth"
 import AddEditUserForm from "@/component/dataTable/userManagement/form/AddEditUserForm"
 import ResetPasswordForm from "@/component/account/form/ResetPasswordForm"
 import { BasicCard } from "@/component/card/basicCard"
+import { permissions } from "@/../prisma/dataSeed"
+import { UserInfoFullMedium } from "@/type/user.type"
 
 type Props = {
-    infoUser: SessionUser
+    infoUserMedium: UserInfoFullMedium
 }
 
-const MyAccount = ({ infoUser }: Props) => {
+const MyAccount = ({ infoUserMedium }: Props) => {
     return (
         <div className={"space-y-2 lg:w-1/2  md:w-2/3 w-full m-auto"}>
             <BasicCard>
                 <AddEditUserForm
                     defaultValues={{
-                        id: infoUser.id,
-                        firstname: infoUser.firstname,
-                        lastname: infoUser.lastname,
-                        email: infoUser.email,
+                        id: infoUserMedium.id,
+                        firstname: infoUserMedium.firstname,
+                        lastname: infoUserMedium.lastname,
+                        email: infoUserMedium.email,
                     }}
                 />
             </BasicCard>
@@ -25,7 +27,7 @@ const MyAccount = ({ infoUser }: Props) => {
                 description="Roles assignés au compte"
             >
                 <ul className={"flex space-x-1"}>
-                    {infoUser.Roles.map((role, index) => (
+                    {infoUserMedium.Roles.map((role, index) => (
                         <li
                             key={index}
                             className="mb-4 pr-3 grid grid-cols-[15px_1fr] items-start pb-4 last:mb-0 last:pb-0"
@@ -44,18 +46,20 @@ const MyAccount = ({ infoUser }: Props) => {
                 description="Permissions assignés au compte"
             >
                 <ul className={"flex space-x-1"}>
-                    {infoUser.Permissions.map((permission, index) => (
-                        <li
-                            key={index}
-                            className="mb-4 pr-3 grid grid-cols-[15px_1fr] items-start last:mb-0 last:pb-0"
-                        >
-                            <span className="flex flex-wrap h-2 w-2 translate-y-1 rounded-full bg-primary" />
-                            <div className="space-y-1">
-                                <p className="text-sm font-medium leading-none">{permission.name}</p>
-                                <p className="text-sm text-muted-foreground">{permission.name}</p>
-                            </div>
-                        </li>
-                    ))}
+                    {infoUserMedium.Permissions.map((permission, index) => {
+                        return (
+                            <li
+                                key={index}
+                                className="mb-4 pr-3 grid grid-cols-[15px_1fr] items-start last:mb-0 last:pb-0"
+                            >
+                                <span className="flex flex-wrap h-2 w-2 translate-y-1 rounded-full bg-primary" />
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium leading-none">{permission.name}</p>
+                                    <p className="text-sm text-muted-foreground">{permission.description}</p>
+                                </div>
+                            </li>
+                        )
+                    })}
                 </ul>
             </BasicCard>
             <BasicCard>

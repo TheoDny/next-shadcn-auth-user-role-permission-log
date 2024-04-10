@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/component/ui/dialog"
-import { UserRole } from "@/type/user.type"
+import { UserIncludeRoleSmall } from "@/type/user.type"
 import AddEditUserForm from "@/component/dataTable/userManagement/form/AddEditUserForm"
 
 type props = {
@@ -11,7 +11,7 @@ type props = {
         email: string
         isActive: boolean
     }
-    afterSubmit: (value: UserRole) => any
+    afterSubmit: (value: UserIncludeRoleSmall) => any
     closeDialog: () => void
 }
 

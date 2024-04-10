@@ -6,7 +6,7 @@ import { ButtonLoading } from "@/component/ui/button-loading"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { addRoleAction, editRoleAction } from "@/action/role.action"
-import { RoleFull } from "@/type/role.type"
+import { RoleIncludePermissionSmall, RoleSmallIncludePermissionSmall } from "@/type/role.type"
 import { addRoleZod } from "@/zod/role.zod"
 import { handleErrorAction } from "@/util/error.util"
 import { toast } from "sonner"
@@ -17,7 +17,7 @@ type props = {
         name: string
         description: string
     }
-    afterSubmit: (value: RoleFull) => any
+    afterSubmit: (value: RoleIncludePermissionSmall) => any
 }
 
 const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {

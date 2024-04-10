@@ -1,9 +1,21 @@
 import { prisma } from "@/lib/prisma"
-import { includeUserFull, includeUserRole, UserFull, UserInfoFull, UserRole } from "@/type/user.type"
-import { PermissionSmall } from "@/type/permission.type"
+import {
+    selectUserWithPwdIncludeRoleSmallIncludePermissionSmall,
+    UserInfoFull,
+    UserIncludeRoleSmall,
+    UserWithPwdIncludeRoleSmallIncludePermissionSmall,
+    selectUserIncludeRoleSmall,
+    UserInfoFullMedium,
+    UserIncludeRoleSmallIncludePermissionSmall,
+    UserIncludeRoleMediumIncludePermissionMedium,
+    selectUserIncludeRoleMediumIncludePermissionMedium,
+} from "@/type/user.type"
+import { PermissionMedium, PermissionSmall } from "@/type/permission.type"
 import { addLog } from "@/service/log.service"
 import { hash } from "bcryptjs"
 import { sendEmailNewUser } from "@/service/mail.service"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 
 export const getUserFullInfoFromEmailOrId = async (
     emailOrId: string,
@@ -11,16 +23,9 @@ export const getUserFullInfoFromEmailOrId = async (
 ): Promise<UserInfoFull | null> => {
     const where = from === "id" ? { id: emailOrId } : { email: emailOrId }
 
-    const userFull: UserFull | null = await prisma.user.findUnique({
+    const userFull: UserWithPwdIncludeRoleSmallIncludePermissionSmall | null = await prisma.user.findUnique({
         where,
-        include: {
-            ...includeUserFull,
-            Roles: {
-                include: {
-                    Permissions: true,
-                },
-            },
-        },
+        select: selectUserWithPwdIncludeRoleSmallIncludePermissionSmall,
     })
 
     if (!userFull) return null
@@ -30,7 +35,7 @@ export const getUserFullInfoFromEmailOrId = async (
         role.Permissions.forEach((permission) => {
             permissionsSet.add(permission)
         })
-        // @ts-ignore --- Clear Permissions to avoid unnecessary data transfer
+        // @ts-ignore:TS2790 --- Clear Permissions to avoid unnecessary data transfer
         delete role.Permissions
     })
 
@@ -39,13 +44,13 @@ export const getUserFullInfoFromEmailOrId = async (
     return { ...userFull, Permissions: permissions }
 }
 
-export const getAllUserRole = async (): Promise<UserRole[]> => {
+export const getAllUserRole = async (): Promise<UserIncludeRoleSmall[]> => {
     return prisma.user.findMany({
-        include: includeUserRole,
+        select: selectUserIncludeRoleSmall,
     })
 }
 
-export const setRoles = async (userId: string, roleIds: string[]): Promise<UserRole> => {
+export const setRoles = async (userId: string, roleIds: string[]): Promise<UserIncludeRoleSmall> => {
     const user = await prisma.user.update({
         where: { id: userId },
         data: {
@@ -55,7 +60,7 @@ export const setRoles = async (userId: string, roleIds: string[]): Promise<UserR
                 }),
             },
         },
-        include: includeUserRole,
+        select: selectUserIncludeRoleSmall,
     })
 
     addLog(
@@ -71,7 +76,7 @@ export const addUser = async (
     lastname: string,
     email: string,
     isActive?: boolean,
-): Promise<UserRole> => {
+): Promise<UserIncludeRoleSmall> => {
     const newUser = await prisma.user.create({
         data: {
             firstname: firstname,
@@ -80,7 +85,7 @@ export const addUser = async (
             password: "to_define_with_email_send",
             isActive: isActive,
         },
-        include: includeUserRole,
+        include: selectUserIncludeRoleSmall,
     })
 
     const resEmail = await sendEmailNewUser(newUser.email, newUser.id)
@@ -102,7 +107,7 @@ export const editUser = async (
     lastname: string,
     email: string,
     isActive?: boolean,
-): Promise<UserRole> => {
+): Promise<UserIncludeRoleSmall> => {
     const editedUser = await prisma.user.update({
         where: { id: userId },
         data: {
@@ -111,7 +116,7 @@ export const editUser = async (
             email: email,
             isActive: isActive,
         },
-        include: includeUserRole,
+        include: selectUserIncludeRoleSmall,
     })
 
     addLog(
@@ -151,4 +156,26 @@ export const sendMailPasswordReset = async (userId: string) => {
     }
 
     return resEmail
+}
+
+export const getAccountInfo = async (userId: string): Promise<UserInfoFullMedium | null> => {
+    const userFull: UserIncludeRoleMediumIncludePermissionMedium | null = await prisma.user.findUnique({
+        where: { id: userId },
+        select: selectUserIncludeRoleMediumIncludePermissionMedium,
+    })
+
+    if (!userFull) return null
+
+    const permissionsSet = new Set<PermissionMedium>()
+    userFull.Roles.forEach((role) => {
+        role.Permissions.forEach((permission) => {
+            permissionsSet.add(permission)
+        })
+        // @ts-ignore:TS2790 --- Clear Permissions to avoid unnecessary data transfer
+        delete role.Permissions
+    })
+
+    const permissions: PermissionMedium[] = Array.from(permissionsSet)
+
+    return { ...userFull, Permissions: permissions }
 }

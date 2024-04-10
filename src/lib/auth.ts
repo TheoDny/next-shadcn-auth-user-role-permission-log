@@ -40,7 +40,6 @@ export const authOptions: AuthOptions = {
                 if (!userInfo.isActive) {
                     throw new Error("Compte désactivé")
                 }
-
                 addLog(
                     "CONNEXION_SUCCESS",
                     `Connexion à l'application de ${userInfo.lastname.toUpperCase()} ${userInfo.firstname}`,

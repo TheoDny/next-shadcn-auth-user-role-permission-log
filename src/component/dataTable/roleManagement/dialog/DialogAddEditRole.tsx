@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/component/ui/dialog"
 
 import AddEditRoleForm from "@/component/dataTable/roleManagement/form/AddEditRoleForm"
-import { RoleFull } from "@/type/role.type"
+import { RoleIncludePermissionSmall } from "@/type/role.type"
 
 type props = {
     show: boolean
@@ -10,7 +10,7 @@ type props = {
         name: string
         description: string
     }
-    afterSubmit: (value: RoleFull) => any
+    afterSubmit: (value: RoleIncludePermissionSmall) => any
     closeDialog: () => void
 }
 

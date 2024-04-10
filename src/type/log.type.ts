@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client"
+import { selectUserSmall, selectUserSmallType } from "@/type/user.type"
 
 export type selectLogUserType = {
     select: {
@@ -7,10 +8,7 @@ export type selectLogUserType = {
         description: true
         createdAt: true
         User: {
-            select: {
-                firstname: true
-                lastname: true
-            }
+            select: selectUserSmallType
         }
     }
 }
@@ -22,10 +20,7 @@ export const selectLogUser: selectLogUserType = {
         description: true,
         createdAt: true,
         User: {
-            select: {
-                firstname: true,
-                lastname: true,
-            },
+            select: selectUserSmall,
         },
     },
 }

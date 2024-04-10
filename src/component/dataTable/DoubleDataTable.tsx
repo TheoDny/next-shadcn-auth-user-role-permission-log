@@ -30,6 +30,9 @@ type props<L, FL, R, FR> = {
     enableColumnVisibilityRight?: boolean
 }
 
+/*
+ * Have to be used within a client component
+ * */
 export default function DoubleDataTable<
     L extends { id: string },
     FL,

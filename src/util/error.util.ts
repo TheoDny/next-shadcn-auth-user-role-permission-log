@@ -8,9 +8,9 @@ export const nextSafeActionValiationErrorToString = (error: Partial<{ [p: string
     return result
 }
 
-export const handleErrorAction = (
+export const handleErrorAction = <T>(
     response: {
-        data?: any
+        data?: T
         serverError?: string | undefined
         validationErrors?: Partial<{ [k: string]: string[] }> | undefined
     },

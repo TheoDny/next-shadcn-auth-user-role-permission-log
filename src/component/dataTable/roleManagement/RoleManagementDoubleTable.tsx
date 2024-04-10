@@ -1,6 +1,6 @@
 "use client"
 import dayjs from "dayjs"
-import { RoleFormatted, RoleFull } from "@/type/role.type"
+import { RoleFormatted, RoleIncludePermissionSmall, RoleSmallIncludePermissionSmall } from "@/type/role.type"
 import DoubleDataTable, { ConfigCustomTable } from "@/component/dataTable/DoubleDataTable"
 import { Permission } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
@@ -15,13 +15,15 @@ import { toast } from "sonner"
 import { handleErrorAction } from "@/util/error.util"
 
 type props = {
-    rolesData: RoleFull[]
+    rolesData: RoleIncludePermissionSmall[]
     permissionsData: Permission[]
 }
 export default function RoleManagementDoubleTable({ rolesData, permissionsData }: props) {
-    const [rolesDataRaw, setRolesDataRaw] = useState<RoleFull[]>(rolesData)
+    const [rolesDataRaw, setRolesDataRaw] = useState<RoleIncludePermissionSmall[]>(rolesData)
     const [showDialogAddEditRole, setShowDialogAddEditRole] = useState(false)
-    const [selectedRole, setSelectedRole] = useState<(RoleFull & { index: number }) | undefined>(undefined)
+    const [selectedRole, setSelectedRole] = useState<(RoleIncludePermissionSmall & { index: number }) | undefined>(
+        undefined,
+    )
 
     const configLeft: ConfigCustomTable = {
         filterPlaceHolder: "Filtre des roles...",
@@ -77,7 +79,7 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
         if (handleErrorAction(response, toast)) {
             setRolesDataRaw((prevState) => {
                 const newState = prevState.slice()
-                newState[roleIndex] = response.data as RoleFull
+                newState[roleIndex] = response.data as RoleIncludePermissionSmall
                 return newState
             })
             toast.success("Permissions du role modifiées")
@@ -114,7 +116,7 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
                 closeDialog={closeDialogAddEdit}
             />
 
-            <DoubleDataTable<RoleFull, RoleFormatted, Permission, Permission>
+            <DoubleDataTable<RoleIncludePermissionSmall, RoleFormatted, Permission, Permission>
                 dataLeft={rolesDataRaw}
                 formatLeft={formatRolesData}
                 columnsLeft={columnsRole}
@@ -137,7 +139,7 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
     )
 }
 
-const formatRolesData = (rolesData: RoleFull[]): RoleFormatted[] => {
+const formatRolesData = (rolesData: RoleIncludePermissionSmall[]): RoleFormatted[] => {
     return rolesData.map((role) => {
         return {
             id: role.id,

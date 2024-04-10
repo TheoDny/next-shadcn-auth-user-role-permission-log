@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer"
 import { generateToken } from "@/util/auth.util"
+import { addLog } from "@/service/log.service"
 
 export interface EmailOptions {
     to: string[]
@@ -97,8 +98,10 @@ export async function sendEmailNewUser(email: string, idUser: string) {
                 </html>
             `,
         })
+        addLog("MAIL_SEND", `Envoi de l'email de nouvel utilisateur à ${email}`)
         return true
     } catch (e) {
+        addLog("MAIL_ERROR", `Erreur lors de l'envoi de l'email de nouvel utilisateur à ${email}`)
         console.error(e)
         return false
     }

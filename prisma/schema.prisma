@@ -54,6 +54,9 @@ enum LogAction {
     // ===== CONNEXION action log =====
     CONNEXION_SUCCESS
     CONNEXION_REFUSE
+    // ===== MAIL action log =====
+    MAIL_SEND
+    MAIL_ERROR
 }
 
 model Log {

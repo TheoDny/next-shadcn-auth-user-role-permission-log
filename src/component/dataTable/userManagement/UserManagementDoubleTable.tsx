@@ -1,6 +1,6 @@
 "use client"
 import dayjs from "dayjs"
-import { UserFormatted, UserRole } from "@/type/user.type"
+import { UserFormatted, UserIncludeRoleSmall } from "@/type/user.type"
 import DoubleDataTable, { ConfigCustomTable } from "@/component/dataTable/DoubleDataTable"
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/component/ui/checkbox"
@@ -16,13 +16,15 @@ import { handleErrorAction } from "@/util/error.util"
 import { MdAccountCircle, MdNoAccounts } from "react-icons/md"
 
 type props = {
-    usersData: UserRole[]
+    usersData: UserIncludeRoleSmall[]
     rolesData: RoleSmall[]
 }
 export default function UserManagementDoubleTable({ usersData, rolesData }: props) {
-    const [usersDataRaw, setUsersDataRaw] = useState<UserRole[]>(usersData)
+    const [usersDataRaw, setUsersDataRaw] = useState<UserIncludeRoleSmall[]>(usersData)
     const [showDialogAddEditUser, setShowDialogAddEditUser] = useState(false)
-    const [selectedUser, setSelectedUser] = useState<(UserRole & { index: number }) | undefined>(undefined)
+    const [selectedUser, setSelectedUser] = useState<(UserIncludeRoleSmall & { index: number }) | undefined>(
+        undefined,
+    )
 
     const configLeft: ConfigCustomTable = {
         filterPlaceHolder: "Filtre des users...",
@@ -77,7 +79,7 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
         if (handleErrorAction(response, toast)) {
             setUsersDataRaw((prevState) => {
                 const newState = prevState.slice()
-                newState[userIndex] = response.data as UserRole
+                newState[userIndex] = response.data as UserIncludeRoleSmall
                 return newState
             })
             toast.success("Roles du user modifiées")
@@ -115,7 +117,7 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
                 }
                 closeDialog={closeDialogAddEdit}
             />
-            <DoubleDataTable<UserRole, UserFormatted, RoleSmall, RoleSmall>
+            <DoubleDataTable<UserIncludeRoleSmall, UserFormatted, RoleSmall, RoleSmall>
                 dataLeft={usersDataRaw}
                 formatLeft={formatUsersData}
                 columnsLeft={columnsUser}
@@ -138,7 +140,7 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
     )
 }
 
-const formatUsersData = (usersData: UserRole[]): UserFormatted[] => {
+const formatUsersData = (usersData: UserIncludeRoleSmall[]): UserFormatted[] => {
     return usersData.map((user) => {
         return {
             id: user.id,

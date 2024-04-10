@@ -67,7 +67,8 @@ const LoginForm = () => {
                                     setVisibility={setVisilityPassword}
                                     visibility={visilityPassword}
                                     autoComplete={"password"}
-                                    {...field} />
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

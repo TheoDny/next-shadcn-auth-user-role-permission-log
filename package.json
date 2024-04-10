@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "next dev --turbo",
         "build": "next build",
-        "prestart": "cpy .next/static .next/standalone/ && cpy public .next/standalone/",
+        "prestart": "shx cp -r .next/static .next/standalone/.next/static && shx cp -r public .next/standalone/public",
         "start": "node .next/standalone/server.js",
         "lint": "next lint",
         "format": "npx prettier --write ."
@@ -15,7 +15,7 @@
     },
     "dependencies": {
         "@hookform/resolvers": "^3.3.4",
-        "@prisma/client": "^5.11.0",
+        "@prisma/client": "^5.12.1",
         "@radix-ui/react-accordion": "^1.1.2",
         "@radix-ui/react-alert-dialog": "^1.0.5",
         "@radix-ui/react-checkbox": "^1.0.4",
@@ -38,13 +38,13 @@
         "next-safe-action": "^6.2.0",
         "next-themes": "^0.3.0",
         "nodemailer": "^6.9.13",
-        "prisma": "^5.11.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-hook-form": "^7.51.2",
         "react-icons": "^5.0.1",
         "react-toastify": "^10.0.5",
         "react-virtuoso": "^4.7.7",
+        "sharp": "^0.33.3",
         "sonner": "^1.4.41",
         "tailwind-merge": "^2.2.2",
         "tailwindcss-animate": "^1.0.7",
@@ -63,7 +63,9 @@
         "eslint-config-next": "14.1.4",
         "postcss": "^8.4.38",
         "prettier": "^3.2.5",
+        "prisma": "^5.12.1",
         "shadcn-ui": "^0.8.0",
+        "shx": "^0.3.4",
         "tailwindcss": "^3.4.3",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.3"

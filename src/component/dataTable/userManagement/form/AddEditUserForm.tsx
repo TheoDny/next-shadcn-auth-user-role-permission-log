@@ -7,7 +7,7 @@ import { ButtonLoading } from "@/component/ui/button-loading"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { addUserAction, editUserAction } from "@/action/user.action"
-import { UserRole } from "@/type/user.type"
+import { UserIncludeRoleSmall } from "@/type/user.type"
 import { addUserZod } from "@/zod/user.zod"
 import { toast } from "sonner"
 import { handleErrorAction } from "@/util/error.util"
@@ -21,7 +21,7 @@ type props = {
         email: string
         isActive?: boolean
     }
-    afterSubmit?: (value: UserRole) => any
+    afterSubmit?: (value: UserIncludeRoleSmall) => any
 }
 
 const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
