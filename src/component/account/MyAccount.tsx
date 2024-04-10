@@ -24,7 +24,7 @@ const MyAccount = ({ infoUserMedium }: Props) => {
                 title="Roles"
                 description="Roles assignés au compte"
             >
-                <ul className={"flex space-x-1"}>
+                <ul className={"flex flex-wrap space-x-1"}>
                     {infoUserMedium.Roles.map((role, index) => (
                         <li
                             key={index}
@@ -43,7 +43,7 @@ const MyAccount = ({ infoUserMedium }: Props) => {
                 title="Permissions"
                 description="Permissions assignés au compte"
             >
-                <ul className={"flex space-x-1"}>
+                <ul className={"flex flex-wrap space-x-1"}>
                     {infoUserMedium.Permissions.map((permission, index) => {
                         return (
                             <li
