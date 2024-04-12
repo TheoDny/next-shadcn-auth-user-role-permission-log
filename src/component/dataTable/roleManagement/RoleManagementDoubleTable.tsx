@@ -92,13 +92,17 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
         <div>
             <DialogAddEditRole
                 show={showDialogAddEditRole}
-                afterSubmit={(role) => {
+                afterSubmit={(role, toDelete = false) => {
                     selectedRole
-                        ? setRolesDataRaw((prevState) => {
-                              const newState = prevState.slice()
-                              newState[selectedRole.index] = role
-                              return newState
-                          })
+                        ? toDelete
+                            ? setRolesDataRaw((prevState) => {
+                                  return prevState.toSpliced(selectedRole.index, 1)
+                              })
+                            : setRolesDataRaw((prevState) => {
+                                  const newState = prevState.slice()
+                                  newState[selectedRole.index] = role
+                                  return newState
+                              })
                         : setRolesDataRaw((prevState) => {
                               const newState = prevState.slice()
                               newState.unshift(role)

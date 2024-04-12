@@ -5,7 +5,7 @@ import { Input } from "@/component/ui/input"
 import { ButtonLoading } from "@/component/ui/button-loading"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { addRoleAction, editRoleAction } from "@/action/role.action"
+import { addRoleAction, deleteRoleAction, editRoleAction } from "@/action/role.action"
 import { RoleIncludePermissionSmall } from "@/type/role.type"
 import { addRoleZod } from "@/zod/role.zod"
 import { handleErrorAction } from "@/util/error.util"
@@ -17,7 +17,7 @@ type props = {
         name: string
         description: string
     }
-    afterSubmit: (value: RoleIncludePermissionSmall) => any
+    afterSubmit: (value: RoleIncludePermissionSmall, toDelete?: boolean) => any
 }
 
 const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
@@ -46,6 +46,19 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
         const response = await editRoleAction({ roleId: defaultValues.id, ...values })
         if (handleErrorAction(response, toast) && response.data) {
             afterSubmit(response.data)
+        }
+
+        setLoading(false)
+    }
+
+    const deleteRole = async () => {
+        if (!defaultValues?.id) return console.error("Aucun roleId fourni")
+        setLoading(true)
+
+        const response = await deleteRoleAction({ roleId: defaultValues.id })
+        if (handleErrorAction(response, toast) && response.data) {
+            //@ts-ignore
+            afterSubmit(response.data, true)
         }
 
         setLoading(false)
@@ -90,6 +103,17 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
                 >
                     {defaultValues ? "Modifier" : "Ajouter"}
                 </ButtonLoading>
+                {defaultValues && (
+                    <ButtonLoading
+                        variant="destructive"
+                        className="w-full !mt-3"
+                        type="button"
+                        loading={loading}
+                        onClick={deleteRole}
+                    >
+                        Supprimer
+                    </ButtonLoading>
+                )}
             </form>
         </Form>
     )

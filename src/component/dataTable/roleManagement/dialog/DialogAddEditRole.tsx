@@ -10,7 +10,7 @@ type props = {
         name: string
         description: string
     }
-    afterSubmit: (value: RoleIncludePermissionSmall) => any
+    afterSubmit: (value: RoleIncludePermissionSmall, toDelete?: boolean) => any
     closeDialog: () => void
 }
 
