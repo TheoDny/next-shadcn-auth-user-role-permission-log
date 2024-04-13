@@ -2,11 +2,11 @@
 import dayjs from "dayjs"
 import { UserFormatted, UserIncludeRoleSmall } from "@/type/user.type"
 import DoubleDataTable, { ConfigCustomTable } from "@/component/dataTable/DoubleDataTable"
-import { ColumnDef } from "@tanstack/react-table"
+import { ColumnDef, SortDirection } from "@tanstack/react-table"
 import { Checkbox } from "@/component/ui/checkbox"
 import { Button } from "@/component/ui/button"
-import { ArrowUpDown } from "lucide-react"
-import { DataTableStyle } from "@/component/dataTable/DataTable"
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
+import { DataTableStyle, SortingIndicator } from "@/component/dataTable/DataTable"
 import { DialogAddEditUser } from "@/component/dataTable/userManagement/dialog/DialogAddEditUser"
 import { ReactNode, useState } from "react"
 import { setRolesAction } from "@/action/user.action"
@@ -171,38 +171,45 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
     },
     {
         accessorKey: "firstname",
-        header: ({ column }) => (
-            <Button
-                size={"sm"}
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Prenom
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: ({ column }) => {
+            const isSorted = column.getIsSorted()
+            return (
+                <Button
+                    size={"sm"}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
+                >
+                    Prénom
+                    <SortingIndicator isSorted={isSorted} />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "lastname",
-        header: ({ column }) => (
-            <Button
-                size={"sm"}
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Nom
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: ({ column }) => {
+            const isSorted = column.getIsSorted()
+            return (
+                <Button
+                    size={"sm"}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
+                >
+                    Nom
+                    <SortingIndicator isSorted={isSorted} />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "email",
         header: ({ column }) => {
+            const isSorted = column.getIsSorted()
             return (
                 <Button
                     size={"sm"}
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
                 >
                     Email
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <SortingIndicator isSorted={isSorted} />
                 </Button>
             )
         },
@@ -210,13 +217,14 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
     {
         accessorKey: "isActive",
         header: ({ column }) => {
+            const isSorted = column.getIsSorted()
             return (
                 <Button
                     size={"sm"}
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
                 >
                     Actif
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <SortingIndicator isSorted={isSorted} />
                 </Button>
             )
         },
@@ -232,27 +240,33 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
     },
     {
         accessorKey: "updatedAt",
-        header: ({ column }) => (
-            <Button
-                size={"sm"}
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Mis à jour
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: ({ column }) => {
+            const isSorted = column.getIsSorted()
+            return (
+                <Button
+                    size={"sm"}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
+                >
+                    Mis à jour
+                    <SortingIndicator isSorted={isSorted} />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "createdAt",
-        header: ({ column }) => (
-            <Button
-                size={"sm"}
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Créé
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: ({ column }) => {
+            const isSorted = column.getIsSorted()
+            return (
+                <Button
+                    size={"sm"}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
+                >
+                    Créé
+                    <SortingIndicator isSorted={isSorted} />
+                </Button>
+            )
+        },
     },
 ]
 
@@ -277,13 +291,14 @@ export const columnsRole: ColumnDef<RoleSmall>[] = [
     {
         accessorKey: "name",
         header: ({ column }) => {
+            const isSorted = column.getIsSorted()
             return (
                 <Button
                     size={"sm"}
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
                 >
                     Nom
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <SortingIndicator isSorted={isSorted} />
                 </Button>
             )
         },
@@ -291,13 +306,14 @@ export const columnsRole: ColumnDef<RoleSmall>[] = [
     {
         accessorKey: "description",
         header: ({ column }) => {
+            const isSorted = column.getIsSorted()
             return (
                 <Button
                     size={"sm"}
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
                 >
                     Description
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <SortingIndicator isSorted={isSorted} />
                 </Button>
             )
         },

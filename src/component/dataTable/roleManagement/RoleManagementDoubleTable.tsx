@@ -7,7 +7,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/component/ui/checkbox"
 import { Button } from "@/component/ui/button"
 import { ArrowUpDown } from "lucide-react"
-import { DataTableStyle } from "@/component/dataTable/DataTable"
+import { DataTableStyle, SortingIndicator } from "@/component/dataTable/DataTable"
 import { DialogAddEditRole } from "@/component/dataTable/roleManagement/dialog/DialogAddEditRole"
 import { ReactNode, useState } from "react"
 import { setPermissionsAction } from "@/action/role.action"
@@ -167,22 +167,23 @@ const columnsRole: ColumnDef<RoleFormatted>[] = [
             />
         ),
         size: 10,
-        minSize: 10, //enforced during column resizing
-        maxSize: 10,
         enableSorting: false,
         enableHiding: false,
     },
     {
         accessorKey: "name",
-        header: ({ column }) => (
-            <Button
-                size={"sm"}
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Nom
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: ({ column }) => {
+            const isSorted = column.getIsSorted()
+            return (
+                <Button
+                    size={"sm"}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
+                >
+                    Nom
+                    <SortingIndicator isSorted={isSorted} />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "description",
@@ -190,27 +191,33 @@ const columnsRole: ColumnDef<RoleFormatted>[] = [
     },
     {
         accessorKey: "updatedAt",
-        header: ({ column }) => (
-            <Button
-                size={"sm"}
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Mis à jour
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: ({ column }) => {
+            const isSorted = column.getIsSorted()
+            return (
+                <Button
+                    size={"sm"}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
+                >
+                    Mis à jour
+                    <SortingIndicator isSorted={isSorted} />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "createdAt",
-        header: ({ column }) => (
-            <Button
-                size={"sm"}
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Créé
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: ({ column }) => {
+            const isSorted = column.getIsSorted()
+            return (
+                <Button
+                    size={"sm"}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
+                >
+                    Créé
+                    <SortingIndicator isSorted={isSorted} />
+                </Button>
+            )
+        },
     },
 ]
 
@@ -229,20 +236,24 @@ const columnsPermission: ColumnDef<Permission>[] = [
                 aria-label="Select row"
             />
         ),
+        size: 10,
         enableSorting: false,
         enableHiding: false,
     },
     {
         accessorKey: "name",
-        header: ({ column }) => (
-            <Button
-                size={"sm"}
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Nom
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: ({ column }) => {
+            const isSorted = column.getIsSorted()
+            return (
+                <Button
+                    size={"sm"}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
+                >
+                    Nom
+                    <SortingIndicator isSorted={isSorted} />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "description",

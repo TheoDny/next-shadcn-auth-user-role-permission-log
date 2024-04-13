@@ -6,6 +6,7 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     getSortedRowModel,
+    SortDirection,
     SortingState,
     useReactTable,
     VisibilityState,
@@ -25,6 +26,7 @@ import { Input } from "@/component/ui/input"
 import { remove as removeDiacritics } from "diacritics"
 import { cn } from "@/lib/utils"
 import { Button } from "@/component/ui/button"
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
 
 export type DataTableStyle = {
     toolbar?: string
@@ -238,4 +240,16 @@ export function DataTable<TData, TValue>({
             </div>
         </div>
     )
+}
+
+export function SortingIndicator({ isSorted }: { isSorted: SortDirection | false }) {
+    if (isSorted === false) return <ArrowUpDown className="ml-2 h-4 w-4" />
+    switch (isSorted) {
+        case "asc":
+            return <ArrowUp className="ml-2 h-4 w-4" />
+        case "desc":
+            return <ArrowDown className="ml-2 h-4 w-4" />
+        default:
+            return <ArrowUpDown className="ml-2 h-4 w-4" />
+    }
 }

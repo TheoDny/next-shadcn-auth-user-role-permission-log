@@ -1,6 +1,6 @@
 "use client"
 import React, { FC } from "react"
-import { DataTable } from "@/component/dataTable/DataTable"
+import { DataTable, SortingIndicator } from "@/component/dataTable/DataTable"
 import { LogUserFormatted } from "@/type/log.type"
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/component/ui/button"
@@ -25,15 +25,18 @@ const LogTable: FC<LogTableProps> = ({ dataLogUser }) => {
 export const columnsLog: ColumnDef<LogUserFormatted>[] = [
     {
         accessorKey: "createdAt",
-        header: ({ column }) => (
-            <Button
-                size={"sm"}
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Créé
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
+        header: ({ column }) => {
+            const isSorted = column.getIsSorted()
+            return (
+                <Button
+                    size={"sm"}
+                    onClick={() => column.toggleSorting(isSorted === "asc")}
+                >
+                    Créé
+                    <SortingIndicator isSorted={isSorted} />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: "user",
