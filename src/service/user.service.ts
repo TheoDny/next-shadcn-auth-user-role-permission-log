@@ -82,7 +82,7 @@ export const addUser = async (
             password: "to_define_with_email_send",
             isActive: isActive,
         },
-        include: selectUserIncludeRoleSmall,
+        select: selectUserIncludeRoleSmall,
     })
 
     const resEmail = await sendEmailNewUser(newUser.email, newUser.id)
@@ -113,7 +113,7 @@ export const editUser = async (
             email: email,
             isActive: isActive,
         },
-        include: selectUserIncludeRoleSmall,
+        select: selectUserIncludeRoleSmall,
     })
 
     addLog(
