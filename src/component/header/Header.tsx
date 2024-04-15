@@ -27,7 +27,9 @@ const Header = async ({ session }: props) => {
 
                 <div className="flex flex-row items-center space-x-3">
                     <div className="hidden h-9 w-9 rounded-full bg-primary text-primary-foreground md:flex items-center justify-center text-center">
-                        <span className="font-semibold text-sm">{initials}</span>
+                        <Link href="/settings/account">
+                            <span className="font-semibold text-sm">{initials}</span>
+                        </Link>
                     </div>
                     <ModeToggle />
                 </div>
