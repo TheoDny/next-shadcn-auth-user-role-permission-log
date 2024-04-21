@@ -67,6 +67,7 @@ export default function DoubleDataTable<
     const isEdited: MutableRefObject<boolean> = useRef(false)
 
     useEffect(() => {
+        // alert("leftSelected, dataLeft, keyLeftToRight")
         const newRightSelected: { [key: string]: true } = {}
         const keys = Object.keys(leftSelected)
         if (keys.length > 0 && dataLeft.length > 0) {

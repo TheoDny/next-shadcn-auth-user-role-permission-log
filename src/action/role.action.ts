@@ -9,7 +9,7 @@ import { idAdminRole } from "../../prisma/dataSeed"
 
 export const setPermissionsAction = action(setPermissionsZod, async ({ roleId, permissionIds }) => {
     const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
+    if (!session?.user || !checkPermissions(session, ["gestion_role"])) {
         throw new Error("Unauthorized")
     }
     if (roleId === idAdminRole) {
@@ -21,7 +21,7 @@ export const setPermissionsAction = action(setPermissionsZod, async ({ roleId, p
 
 export const addRoleAction = action(addRoleZod, async ({ name, description }) => {
     const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
+    if (!session?.user || !checkPermissions(session, ["gestion_role"])) {
         throw new Error("Unauthorized")
     }
 
@@ -30,7 +30,7 @@ export const addRoleAction = action(addRoleZod, async ({ name, description }) =>
 
 export const editRoleAction = action(editRoleZod, async ({ roleId, name, description }) => {
     const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
+    if (!session?.user || !checkPermissions(session, ["gestion_role"])) {
         throw new Error("Unauthorized")
     }
     if (roleId === idAdminRole) {
@@ -42,7 +42,7 @@ export const editRoleAction = action(editRoleZod, async ({ roleId, name, descrip
 
 export const deleteRoleAction = action(deleteRoleZod, async ({ roleId }) => {
     const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
+    if (!session?.user || !checkPermissions(session, ["gestion_role"])) {
         throw new Error("Unauthorized")
     }
 

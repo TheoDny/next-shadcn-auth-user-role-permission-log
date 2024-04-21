@@ -154,8 +154,8 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
     )
 }
 
-const formatRolesData = (rolesData: RoleIncludePermissionSmall[]): RoleFormatted[] => {
-    return rolesData.map((role) => {
+const formatRolesData = (roles: RoleIncludePermissionSmall[]): RoleFormatted[] => {
+    return roles.map((role) => {
         return {
             id: role.id,
             name: role.name,

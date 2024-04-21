@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth"
 import Header from "@/component/header/Header"
 import { Toaster } from "@/component/ui/sonner"
 import SideNav from "@/component/sideBar/SideNav"
-import { NextAuthProvider, ThemeProvider } from "./providers"
+import { ConfirmDialogProvider, NextAuthProvider, ThemeProvider } from "./providers"
 import Login from "@/component/login/Login"
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
@@ -26,10 +26,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                             enableSystem
                             disableTransitionOnChange
                         >
-                            <SideNav />
-                            <Header session={session} />
-                            {/*<HeaderMobile />*/}
-                            <main className={"md:ml-52 md:px-3 md:pb-2 md:pt-3 px-1 pb-1 pt-1"}>{children}</main>
+                            <ConfirmDialogProvider>
+                                <SideNav />
+                                <Header session={session} />
+                                {/*<HeaderMobile />*/}
+                                <main className={"md:ml-52 md:px-3 md:pb-2 md:pt-3 px-1 pb-1 pt-1"}>
+                                    {children}
+                                </main>
+                            </ConfirmDialogProvider>
                         </ThemeProvider>
                     ) : (
                         <div className="flex justify-center items-center h-screen">

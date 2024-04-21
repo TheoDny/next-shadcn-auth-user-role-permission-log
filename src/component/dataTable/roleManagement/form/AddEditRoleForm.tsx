@@ -10,6 +10,7 @@ import { RoleIncludePermissionSmall } from "@/type/role.type"
 import { addRoleZod } from "@/zod/role.zod"
 import { handleErrorAction } from "@/util/error.util"
 import { toast } from "sonner"
+import { useConfirm } from "@/provider/ConfirmationProvider"
 
 type props = {
     defaultValues?: {
@@ -22,6 +23,8 @@ type props = {
 
 const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
     const [loading, setLoading] = useState(false)
+
+    const { confirm } = useConfirm()
 
     const form = useForm<z.infer<typeof addRoleZod>>({
         resolver: zodResolver(addRoleZod),
@@ -53,69 +56,74 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
 
     const deleteRole = async () => {
         if (!defaultValues?.id) return console.error("Aucun roleId fourni")
-        setLoading(true)
 
-        const response = await deleteRoleAction({ roleId: defaultValues.id })
-        if (handleErrorAction(response, toast) && response.data) {
-            //@ts-ignore
-            afterSubmit(response.data, true)
+        if (await confirm()) {
+            setLoading(true)
+
+            const response = await deleteRoleAction({ roleId: defaultValues.id })
+            if (handleErrorAction(response, toast) && response.data) {
+                //@ts-ignore
+                afterSubmit(response.data, true)
+            }
+
+            setLoading(false)
         }
-
-        setLoading(false)
     }
 
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(defaultValues?.id ? editRole : addRole)}
-                className="space-y-3"
-            >
-                <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Nom</FormLabel>
-                            <FormControl>
-                                <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Description</FormLabel>
-                            <FormControl>
-                                <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <ButtonLoading
-                    className="w-full !mt-6"
-                    type="submit"
-                    loading={loading}
+        <>
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(defaultValues?.id ? editRole : addRole)}
+                    className="space-y-3"
                 >
-                    {defaultValues ? "Modifier" : "Ajouter"}
-                </ButtonLoading>
-                {defaultValues && (
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Nom</FormLabel>
+                                <FormControl>
+                                    <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl>
+                                    <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <ButtonLoading
-                        variant="destructive"
-                        className="w-full !mt-3"
-                        type="button"
+                        className="w-full !mt-6"
+                        type="submit"
                         loading={loading}
-                        onClick={deleteRole}
                     >
-                        Supprimer
+                        {defaultValues ? "Modifier" : "Ajouter"}
                     </ButtonLoading>
-                )}
-            </form>
-        </Form>
+                    {defaultValues && (
+                        <ButtonLoading
+                            variant="destructive"
+                            className="w-full !mt-3"
+                            type="button"
+                            loading={loading}
+                            onClick={deleteRole}
+                        >
+                            Supprimer
+                        </ButtonLoading>
+                    )}
+                </form>
+            </Form>
+        </>
     )
 }
 

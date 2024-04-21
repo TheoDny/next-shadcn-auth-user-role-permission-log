@@ -8,16 +8,18 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/component/ui/alert-dialog"
+import { ReactNode } from "react"
 
 export type ConfirmDialogProps = {
     onConfirm: () => void
-    onCancel?: () => void
-    title?: string
-    description?: string
+    onCancel: () => void
+    open: boolean
+    title?: ReactNode
+    description?: ReactNode
 }
-export function ConfirmDialog({ onConfirm, onCancel, title, description }: ConfirmDialogProps) {
+export function ConfirmDialog({ open, onConfirm, onCancel, title, description }: ConfirmDialogProps) {
     return (
-        <AlertDialog>
+        <AlertDialog open={open}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>{title ? title : "Êtes vous sûres ?"}</AlertDialogTitle>

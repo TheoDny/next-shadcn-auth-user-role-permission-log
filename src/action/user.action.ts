@@ -16,7 +16,7 @@ export const setRolesAction = action(
     }),
     async ({ userId, roleIds }) => {
         const session = await getServerSession(authOptions)
-        if (!session || !checkPermissions(session, ["gestion_user"])) {
+        if (!session?.user || !checkPermissions(session, ["gestion_user"])) {
             throw new Error("Unauthorized")
         }
         if (userId === idAdminAccount) {
@@ -29,7 +29,7 @@ export const setRolesAction = action(
 
 export const addUserAction = action(addUserZod, async ({ firstname, lastname, email, isActive }) => {
     const session = await getServerSession(authOptions)
-    if (!session || !checkPermissions(session, ["gestion_role"])) {
+    if (!session?.user || !checkPermissions(session, ["gestion_role"])) {
         throw new Error("Unauthorized")
     }
 
@@ -38,7 +38,7 @@ export const addUserAction = action(addUserZod, async ({ firstname, lastname, em
 
 export const editUserAction = action(editUserZod, async ({ userId, firstname, lastname, email, isActive }) => {
     const session = await getServerSession(authOptions)
-    if (!session || (!checkPermissions(session, ["gestion_role"]) && userId !== session.user.id)) {
+    if (!session?.user || (!checkPermissions(session, ["gestion_role"]) && userId !== session.user.id)) {
         throw new Error("Unauthorized")
     }
     if (userId === idAdminAccount) {
@@ -56,7 +56,7 @@ export const resetPasswordAction = action(
     async ({ token, newPassword }) => {
         if (!token) {
             const session = await getServerSession(authOptions)
-            if (!session || !session.user?.id) {
+            if (!session?.user || !session.user?.id) {
                 throw new Error("Unauthorized: No active session found.")
             }
             return await resetPassword(session.user.id, newPassword)
@@ -76,7 +76,7 @@ export const sendMailPasswordResetAction = action(
     }),
     async ({ userId }) => {
         const session = await getServerSession(authOptions)
-        if (!session || (!checkPermissions(session, ["gestion_role"]) && Boolean(userId))) {
+        if (!session?.user || (!checkPermissions(session, ["gestion_role"]) && Boolean(userId))) {
             throw new Error("Unauthorized")
         }
         if (!userId) {
