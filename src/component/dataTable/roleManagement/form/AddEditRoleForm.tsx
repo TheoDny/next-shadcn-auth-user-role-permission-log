@@ -59,7 +59,7 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
     const deleteRole = async () => {
         if (!defaultValues?.id) return console.error("Aucun roleId fourni")
 
-        if (await confirm()) {
+        if (await confirm("Êtes-vous sûr de vouloir supprimer ce role ?", "Cette suppression est définitive.")) {
             setLoading(true)
 
             const response = await deleteRoleAction({ roleId: defaultValues.id })

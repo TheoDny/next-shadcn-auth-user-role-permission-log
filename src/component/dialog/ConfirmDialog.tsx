@@ -26,8 +26,8 @@ export function ConfirmDialog({ open, onConfirm, onCancel, title, description }:
                     {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => onCancel && onCancel()}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => onConfirm()}>Continue</AlertDialogAction>
+                    <AlertDialogCancel onClick={() => onCancel()}>Annuler</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => onConfirm()}>Confirmer</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
