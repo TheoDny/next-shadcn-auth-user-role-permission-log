@@ -18,7 +18,9 @@ type props = {
         name: string
         description: string
     }
-    afterSubmit: (value: RoleIncludePermissionSmall, toDelete?: boolean) => any
+    afterSubmit:
+        | ((value: RoleIncludePermissionSmall, toDelete?: false) => any)
+        | ((value: any, toDelete?: true) => any)
 }
 
 const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
@@ -62,7 +64,7 @@ const AddEditRoleForm = ({ defaultValues, afterSubmit }: props) => {
 
             const response = await deleteRoleAction({ roleId: defaultValues.id })
             if (handleErrorAction(response, toast) && response.data) {
-                //@ts-ignore
+                // @ts-ignore
                 afterSubmit(response.data, true)
             }
 

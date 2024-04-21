@@ -67,15 +67,17 @@ export default function DoubleDataTable<
     const isEdited: MutableRefObject<boolean> = useRef(false)
 
     useEffect(() => {
-        // alert("leftSelected, dataLeft, keyLeftToRight")
         const newRightSelected: { [key: string]: true } = {}
         const keys = Object.keys(leftSelected)
         if (keys.length > 0 && dataLeft.length > 0) {
             const leftSelectedRaw: L = dataLeft[parseInt(keys[0])] as L
-            ;(leftSelectedRaw[keyLeftToRight] as { id: string }[]).forEach((rightObjInLeft) => {
-                const id = rightObjInLeft.id
-                newRightSelected[id] = true
-            })
+            // check if dataLeft[keys] was deleted
+            if (leftSelectedRaw) {
+                ;(leftSelectedRaw[keyLeftToRight] as { id: string }[]).forEach((rightObjInLeft) => {
+                    const id = rightObjInLeft.id
+                    newRightSelected[id] = true
+                })
+            }
         }
         setRightSelected(newRightSelected)
     }, [leftSelected, dataLeft, keyLeftToRight])
