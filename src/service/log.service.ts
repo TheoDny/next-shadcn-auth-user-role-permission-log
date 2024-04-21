@@ -20,12 +20,13 @@ export const getAllLogUserFormated = async (): Promise<LogUserFormatted[] | null
             action,
             description,
             to_char(l."createdAt", 'DD/MM/YYYY HH24:MI:SS') as "createdAt",
-            concat(u.firstname, ' ', u.lastname) as "user"
+            concat(u.firstname, ' ', u.lastname) as "user",
+            l."createdAt" as "toSortCreatedAt"
         FROM
             "Log" as l
                 left join "User" u on l."userId" = u.id
         ORDER BY
-            "createdAt" DESC
+            "toSortCreatedAt" DESC
     `
     return prisma.$queryRawUnsafe(query)
 }

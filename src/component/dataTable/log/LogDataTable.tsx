@@ -4,7 +4,7 @@ import { DataTable, SortingIndicator } from "@/component/dataTable/DataTable"
 import { LogUserFormatted } from "@/type/log.type"
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/component/ui/button"
-import { ArrowUpDown } from "lucide-react"
+import { sortDate } from "@/util/date.util"
 
 type LogTableProps = {
     dataLogUser: LogUserFormatted[]
@@ -37,6 +37,8 @@ export const columnsLog: ColumnDef<LogUserFormatted>[] = [
                 </Button>
             )
         },
+        sortingFn: (rowA, rowB, columnId) =>
+            sortDate(rowA.getValue(columnId), rowB.getValue(columnId), "DD/MM/YYYY HH:mm:ss"),
     },
     {
         accessorKey: "user",

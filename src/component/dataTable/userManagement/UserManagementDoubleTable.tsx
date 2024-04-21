@@ -2,10 +2,9 @@
 import dayjs from "dayjs"
 import { UserFormatted, UserIncludeRoleSmall } from "@/type/user.type"
 import DoubleDataTable, { ConfigCustomTable } from "@/component/dataTable/DoubleDataTable"
-import { ColumnDef, SortDirection } from "@tanstack/react-table"
+import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/component/ui/checkbox"
 import { Button } from "@/component/ui/button"
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
 import { DataTableStyle, SortingIndicator } from "@/component/dataTable/DataTable"
 import { DialogAddEditUser } from "@/component/dataTable/userManagement/dialog/DialogAddEditUser"
 import { ReactNode, useState } from "react"
@@ -14,6 +13,7 @@ import { toast } from "sonner"
 import { RoleSmall } from "@/type/role.type"
 import { handleErrorAction } from "@/util/error.util"
 import { MdAccountCircle, MdNoAccounts } from "react-icons/md"
+import { sortDate } from "@/util/date.util"
 
 type props = {
     usersData: UserIncludeRoleSmall[]
@@ -252,6 +252,7 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
                 </Button>
             )
         },
+        sortingFn: (rowA, rowB, columnId) => sortDate(rowA.getValue(columnId), rowB.getValue(columnId)),
     },
     {
         accessorKey: "createdAt",
@@ -267,6 +268,7 @@ const columnsUser: ColumnDef<UserFormatted>[] = [
                 </Button>
             )
         },
+        sortingFn: (rowA, rowB, columnId) => sortDate(rowA.getValue(columnId), rowB.getValue(columnId)),
     },
 ]
 

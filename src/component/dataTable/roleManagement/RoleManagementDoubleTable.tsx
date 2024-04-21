@@ -12,6 +12,7 @@ import { ReactNode, useState } from "react"
 import { setPermissionsAction } from "@/action/role.action"
 import { toast } from "sonner"
 import { handleErrorAction } from "@/util/error.util"
+import { sortDate } from "@/util/date.util"
 
 type props = {
     rolesData: RoleIncludePermissionSmall[]
@@ -214,6 +215,7 @@ const columnsRole: ColumnDef<RoleFormatted>[] = [
                 </Button>
             )
         },
+        sortingFn: (rowA, rowB, columnId) => sortDate(rowA.getValue(columnId), rowB.getValue(columnId)),
     },
     {
         accessorKey: "createdAt",
@@ -229,6 +231,7 @@ const columnsRole: ColumnDef<RoleFormatted>[] = [
                 </Button>
             )
         },
+        sortingFn: (rowA, rowB, columnId) => sortDate(rowA.getValue(columnId), rowB.getValue(columnId)),
     },
 ]
 
