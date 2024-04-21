@@ -6,7 +6,6 @@ import { Permission } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/component/ui/checkbox"
 import { Button } from "@/component/ui/button"
-import { ArrowUpDown } from "lucide-react"
 import { DataTableStyle, SortingIndicator } from "@/component/dataTable/DataTable"
 import { DialogAddEditRole } from "@/component/dataTable/roleManagement/dialog/DialogAddEditRole"
 import { ReactNode, useState } from "react"
@@ -88,6 +87,28 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
         return false
     }
 
+    const handleDeleteRole = async (roleIndex: number) => {
+        setRolesDataRaw((prevState) => {
+            return prevState.toSpliced(roleIndex, 1)
+        })
+    }
+
+    const handleUpdateRole = async (roleIndex: number, role: RoleIncludePermissionSmall) => {
+        setRolesDataRaw((prevState) => {
+            const newState = prevState.slice()
+            newState[roleIndex] = role
+            return newState
+        })
+    }
+
+    const handleAddRole = async (role: RoleIncludePermissionSmall) => {
+        setRolesDataRaw((prevState) => {
+            const newState = prevState.slice()
+            newState.unshift(role)
+            return newState
+        })
+    }
+
     return (
         <div>
             <DialogAddEditRole
@@ -95,19 +116,9 @@ export default function RoleManagementDoubleTable({ rolesData, permissionsData }
                 afterSubmit={(role, toDelete = false) => {
                     selectedRole
                         ? toDelete
-                            ? setRolesDataRaw((prevState) => {
-                                  return prevState.toSpliced(selectedRole.index, 1)
-                              })
-                            : setRolesDataRaw((prevState) => {
-                                  const newState = prevState.slice()
-                                  newState[selectedRole.index] = role
-                                  return newState
-                              })
-                        : setRolesDataRaw((prevState) => {
-                              const newState = prevState.slice()
-                              newState.unshift(role)
-                              return newState
-                          })
+                            ? handleDeleteRole(selectedRole.index)
+                            : handleUpdateRole(selectedRole.index, role)
+                        : handleAddRole(role)
                     closeDialogAddEdit()
                 }}
                 defaultValues={
