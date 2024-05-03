@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/component/ui/card"
 import LoginForm from "@/component/login/LoginForm"
 import Image from "next/image"
 
-const Login = ({ className }: { className: string }) => {
+const Login = ({ className }: { className?: string }) => {
     return (
         <Card className={"w-[350px] " + className}>
             <CardHeader className={"items-center"}>

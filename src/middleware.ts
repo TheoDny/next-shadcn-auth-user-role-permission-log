@@ -1,5 +1,5 @@
 export { default } from "next-auth/middleware"
 
 export const config = {
-    matcher: ["/securethat"],
+    matcher: ["/((?!api/auth|login|_next/static|_next/image|logo-full.png|settings/account/reset-password).*)"],
 }

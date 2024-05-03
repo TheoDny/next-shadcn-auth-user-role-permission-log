@@ -7,7 +7,7 @@ import { addLog } from "@/service/log.service"
 
 export const authOptions: AuthOptions = {
     pages: {
-        signIn: "/",
+        signIn: "/login",
     },
     session: {
         strategy: "jwt",

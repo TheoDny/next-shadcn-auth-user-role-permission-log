@@ -25,7 +25,7 @@ export const NewUser = ({ idUser, appName }: NewUserProps) => {
                     </Text>
                     <Button>
                         <a
-                            href={`${process.env.NEXTAUTH_URL}/auth/reset-password?token=${token}`}
+                            href={`${process.env.NEXTAUTH_URL}/settings/account/reset-password?token=${token}`}
                             style={styles.a}
                         >
                             Définir votre mot de passe

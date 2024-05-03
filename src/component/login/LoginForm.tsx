@@ -7,10 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { ButtonLoading } from "@/component/ui/button-loading"
 import { useState } from "react"
+import { useSearchParams } from "next/navigation"
 
 const LoginForm = () => {
     const [loading, setLoading] = useState(false)
     const [visilityPassword, setVisilityPassword] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+    const callbackUrl = useSearchParams().get("callbackUrl") || "/"
 
     const formSchema = z.object({
         email: z.string().email({
@@ -29,10 +32,21 @@ const LoginForm = () => {
 
     const handleLogin = async (values: z.infer<typeof formSchema>) => {
         setLoading(true)
-        await signIn("credentials", {
+        const result = await signIn("credentials", {
+            redirect: false,
             email: values.email,
             password: values.password,
+            callbackUrl,
         })
+        if (result) {
+            if (result.error) {
+                setError(result.error as string)
+                console.error("Login failed:", result.error)
+            }
+            if (result.ok) {
+                window.location.href = result.url ?? "/"
+            }
+        }
         setLoading(false)
     }
 
@@ -82,6 +96,7 @@ const LoginForm = () => {
                     Connexion
                 </ButtonLoading>
             </form>
+            {error && <FormMessage>{error}</FormMessage>}
         </Form>
     )
 }

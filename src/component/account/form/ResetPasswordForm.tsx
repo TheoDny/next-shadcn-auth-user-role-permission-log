@@ -12,7 +12,7 @@ import { toast } from "sonner"
 import { resetPasswordAction } from "@/action/user.action"
 import { resetPasswordZod } from "@/zod/user.zod"
 
-const ResetPasswordForm = () => {
+const ResetPasswordForm = ({ token }: { token?: string }) => {
     const [loading, setLoading] = useState(false)
     const [visilityNewPassword, setVisilityNewPassword] = useState(false)
     const [visilityRepeatNewPassword, setVisilityRepeatNewPassword] = useState(false)
@@ -22,6 +22,7 @@ const ResetPasswordForm = () => {
         defaultValues: {
             newPassword: "",
             repeatNewPassword: "",
+            token: token,
         },
     })
 
@@ -32,12 +33,13 @@ const ResetPasswordForm = () => {
         if (handleErrorAction(response, toast) && response.data) {
             toast.success("Le mot de passe a été modifié avec succès")
             form.reset()
+            if (token) {
+                window.location.href = "/login"
+            }
         }
 
         setLoading(false)
     }
-
-    useEffect(() => {}, [])
 
     return (
         <Form {...form}>

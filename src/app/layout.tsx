@@ -7,7 +7,6 @@ import Header from "@/component/header/Header"
 import { Toaster } from "@/component/ui/sonner"
 import SideNav from "@/component/sideBar/SideNav"
 import { ConfirmDialogProvider, NextAuthProvider, ThemeProvider } from "./providers"
-import Login from "@/component/login/Login"
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
     const session = await getServerSession(authOptions)
@@ -36,9 +35,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                             </ConfirmDialogProvider>
                         </ThemeProvider>
                     ) : (
-                        <div className="flex justify-center items-center h-screen">
-                            <Login className={"mb-36"} />
-                        </div>
+                        <main className={"md:ml-52 md:px-3 md:pb-2 md:pt-3 px-1 pb-1 pt-1"}>{children}</main>
                     )}
                 </NextAuthProvider>
                 <Toaster />
