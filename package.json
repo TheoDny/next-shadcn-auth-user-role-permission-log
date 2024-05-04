@@ -27,6 +27,7 @@
         "@radix-ui/react-switch": "^1.0.3",
         "@radix-ui/react-toast": "^1.1.5",
         "@react-email/components": "0.0.17",
+        "@react-email/render": "^0.0.13",
         "@tanstack/react-table": "^8.16.0",
         "bcryptjs": "^2.4.3",
         "class-variance-authority": "^0.7.0",

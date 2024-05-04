@@ -8,7 +8,7 @@ import { NewUser } from "../../emails/auth/NewUser"
 export interface EmailOptions {
     to: string[]
     subject: string
-    htmlContent: string
+    html: string
     attachments?: { filename: string; path: string }[]
 }
 
@@ -30,7 +30,7 @@ async function sendEmail(options: EmailOptions) {
             from: `"${process.env.NEXT_PUBLIC_APP_NAME}" <myapp@test.com>`, //<myapp@test.com> does not work with gmail
             to: options.to.join(", "),
             subject: options.subject,
-            html: options.htmlContent,
+            html: options.html,
             attachments: options.attachments,
         }
         info = await transporter.sendMail(mailOptions)
@@ -40,13 +40,13 @@ async function sendEmail(options: EmailOptions) {
 
 export async function sendEmailNewUser(email: string, idUser: string) {
     const appName = process.env.NEXT_PUBLIC_APP_NAME || "Mon Application"
-    const emailHtml = render(NewUser({ idUser: idUser, appName: appName }))
+    const html = render(NewUser({ idUser: idUser, appName: appName }))
 
     try {
         await sendEmail({
             to: [email],
             subject: `Bienvenue sur ${appName} - Création de compte`,
-            htmlContent: emailHtml,
+            html: html,
         })
         addLog("MAIL_SEND", `Envoi de l'email de nouvel utilisateur à ${email}`)
         return true

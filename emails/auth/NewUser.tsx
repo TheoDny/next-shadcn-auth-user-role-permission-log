@@ -1,4 +1,4 @@
-import { Body, Button, Container, Head, Html, Preview, Text } from "@react-email/components"
+import { Body, Button, Container, Head, Html, Img, Preview, Section, Text } from "@react-email/components"
 import { generateToken } from "@/util/auth.util"
 import { Hr } from "@react-email/hr"
 import { CSSProperties } from "react"
@@ -10,10 +10,10 @@ interface NewUserProps {
 
 export const NewUser = ({ idUser, appName }: NewUserProps) => {
     const token = generateToken({ idUser: idUser }, "24hours")
+    const app_url = process.env.NEXTAUTH_URL || "http://localhost:3000"
 
     return (
         <Html>
-            <Head />
             <Preview>Bienvenue sur {appName} !</Preview>
             <Body style={styles.body}>
                 <Container style={styles.container}>
@@ -25,7 +25,7 @@ export const NewUser = ({ idUser, appName }: NewUserProps) => {
                     </Text>
                     <Button>
                         <a
-                            href={`${process.env.NEXTAUTH_URL}/settings/account/reset-password?token=${token}`}
+                            href={`${app_url}/settings/account/reset-password?token=${token}`}
                             style={styles.a}
                         >
                             Définir votre mot de passe
@@ -56,13 +56,13 @@ const styles: { [k: string]: CSSProperties } = {
         maxWidth: "600px",
         margin: "0 auto",
         padding: "20px",
-        backgroundColor: "hsl(204 60% 98%)",
-        color: "hsl(204 70% 4%)",
+        backgroundColor: "#F7FBFDFF",
+        color: "#030C11FF",
         borderRadius: "10px",
         boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
     },
     h2: {
-        color: "hsl(204 98% 35%)",
+        color: "#026BB1FF",
         fontWeight: "bolder",
         fontSize: "24px",
     },
@@ -73,8 +73,8 @@ const styles: { [k: string]: CSSProperties } = {
     a: {
         display: "inline-block",
         padding: "12px 20px",
-        backgroundColor: "hsl(204 98% 31%)",
-        color: "hsl(0 0% 100%)",
+        backgroundColor: "#025F9DFF",
+        color: "#FFFFFFFF",
         textDecoration: "none",
         borderRadius: "5px",
     },
