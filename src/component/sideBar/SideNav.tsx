@@ -3,16 +3,17 @@
 import Link from "next/link"
 
 import { NAVIGATION_ITEMS } from "@/constant/navigation.constant"
-import { NavigationItemType } from "@/type/navigation.type"
 import { NavigationItem } from "@/component/sideBar/NavigationItem"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { Button } from "@/component/ui/button"
 import { signOut } from "next-auth/react"
+import { Session } from "next-auth"
+import { checkPermissions } from "@/util/auth.util"
 
-const SideNav = () => {
+const SideNav = ({ session }: { session: Session }) => {
     const pathname = usePathname()
     const { resolvedTheme } = useTheme()
     const [imageLink, setImageLink] = useState<string>("/logo-full.png")
@@ -41,18 +42,21 @@ const SideNav = () => {
                         priority={true}
                     />
                 </Link>
-
                 <div className="flex flex-col space-y-1 md:px-3">
-                    {NAVIGATION_ITEMS.map((item: NavigationItemType, index: number) => {
-                        return (
-                            <NavigationItem
-                                key={index}
-                                item={item}
-                                index={index}
-                                pathname={pathname}
-                            />
-                        )
-                    })}
+                    {NAVIGATION_ITEMS.reduce((acc: ReactNode[], item, index) => {
+                        if (!item.requiredPermission || checkPermissions(session, item.requiredPermission)) {
+                            acc.push(
+                                <NavigationItem
+                                    key={index}
+                                    item={item}
+                                    index={index}
+                                    pathname={pathname}
+                                    session={session}
+                                />,
+                            )
+                        }
+                        return acc
+                    }, [])}
                 </div>
             </div>
             <div className="flex flex-col space-y-1 md:p-3 p-1  border-t border-accent">

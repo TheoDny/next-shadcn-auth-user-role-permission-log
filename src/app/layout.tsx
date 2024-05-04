@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                             disableTransitionOnChange
                         >
                             <ConfirmDialogProvider>
-                                <SideNav />
+                                <SideNav session={session} />
                                 <Header session={session} />
                                 {/*<HeaderMobile />*/}
                                 <main className={"md:ml-52 md:px-3 md:pb-2 md:pt-3 px-1 pb-1 pt-1"}>

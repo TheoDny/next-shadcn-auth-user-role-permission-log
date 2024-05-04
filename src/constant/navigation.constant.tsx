@@ -8,9 +8,13 @@ export const NAVIGATION_ITEMS: NavigationItemType[] = [
     {
         title: "Administration",
         subMenuItems: [
-            { title: "Gestion Utilisateurs", path: "/admin/users_management" },
-            { title: "Gestion Roles", path: "/admin/roles_management" },
-            { title: "Log Utilisateur", path: "/admin/log_user" },
+            {
+                title: "Gestion Utilisateurs",
+                path: "/admin/users_management",
+                requiredPermission: ["gestion_user"],
+            },
+            { title: "Gestion Roles", path: "/admin/roles_management", requiredPermission: ["gestion_role"] },
+            { title: "Log Utilisateur", path: "/admin/log_user", requiredPermission: ["log_user"] },
         ],
     },
     {

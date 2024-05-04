@@ -1,3 +1,4 @@
+"use server"
 import Login from "@/component/login/Login"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"

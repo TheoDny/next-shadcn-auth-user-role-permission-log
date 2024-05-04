@@ -1,4 +1,4 @@
-"use client"
+"use server"
 import { Card, CardContent, CardFooter, CardHeader } from "@/component/ui/card"
 import LoginForm from "@/component/login/LoginForm"
 import Image from "next/image"
