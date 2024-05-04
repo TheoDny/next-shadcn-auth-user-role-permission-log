@@ -7,6 +7,10 @@ export const addUserZod = z.object({
     isActive: z.boolean().optional(),
 })
 
+export const deleteUserZod = z.object({
+    userId: z.string().cuid(),
+})
+
 export const editUserZod = z.object({
     userId: z.string().cuid(),
     firstname: z.string().min(1).max(48, "Le prénom doit être compris entre 1 et 48 caractères"),

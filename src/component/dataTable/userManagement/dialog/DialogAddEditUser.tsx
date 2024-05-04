@@ -11,7 +11,7 @@ type props = {
         email: string
         isActive: boolean
     }
-    afterSubmit: (value: UserIncludeRoleSmall) => any
+    afterSubmit: (value: UserIncludeRoleSmall, action: "edit" | "delete" | "add") => any
     closeDialog: () => void
 }
 
@@ -32,6 +32,7 @@ export function DialogAddEditUser({ show, defaultValues, afterSubmit, closeDialo
                 <AddEditUserForm
                     defaultValues={defaultValues}
                     afterSubmit={afterSubmit}
+                    canDelete={true}
                 />
             </DialogContent>
         </Dialog>

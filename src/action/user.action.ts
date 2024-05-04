@@ -1,8 +1,15 @@
 "use server"
-import { addUser, editUser, resetPassword, sendMailPasswordReset, setRoles } from "@/service/user.service"
+import {
+    addUser,
+    deleteUser,
+    editUser,
+    resetPassword,
+    sendMailPasswordReset,
+    setRoles,
+} from "@/service/user.service"
 import { z } from "zod"
 import { action } from "@/lib/safe-actions"
-import { addUserZod, editUserZod } from "@/zod/user.zod"
+import { addUserZod, deleteUserZod, editUserZod } from "@/zod/user.zod"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { checkPermissions } from "@/util/auth.util"
@@ -29,16 +36,25 @@ export const setRolesAction = action(
 
 export const addUserAction = action(addUserZod, async ({ firstname, lastname, email, isActive }) => {
     const session = await getServerSession(authOptions)
-    if (!session?.user || !checkPermissions(session, ["gestion_role"])) {
+    if (!session?.user || !checkPermissions(session, ["gestion_user"])) {
         throw new Error("Unauthorized")
     }
 
     return await addUser(firstname, lastname, email, isActive)
 })
 
+export const deleteUserAction = action(deleteUserZod, async ({ userId }) => {
+    const session = await getServerSession(authOptions)
+    if (!session?.user || !checkPermissions(session, ["gestion_user"])) {
+        throw new Error("Unauthorized")
+    }
+
+    return await deleteUser(userId)
+})
+
 export const editUserAction = action(editUserZod, async ({ userId, firstname, lastname, email, isActive }) => {
     const session = await getServerSession(authOptions)
-    if (!session?.user || (!checkPermissions(session, ["gestion_role"]) && userId !== session.user.id)) {
+    if (!session?.user || (!checkPermissions(session, ["gestion_user"]) && userId !== session.user.id)) {
         throw new Error("Unauthorized")
     }
     if (userId === idAdminAccount) {

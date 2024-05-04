@@ -33,6 +33,7 @@ export const selectUser = {
     isActive: true,
     updatedAt: true,
     createdAt: true,
+    deletedAt: true,
 }
 
 export type selectUserType = typeof selectUser

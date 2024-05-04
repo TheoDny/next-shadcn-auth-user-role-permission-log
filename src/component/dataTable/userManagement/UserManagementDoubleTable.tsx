@@ -92,18 +92,34 @@ export default function UserManagementDoubleTable({ usersData, rolesData }: prop
         <div>
             <DialogAddEditUser
                 show={showDialogAddEditUser}
-                afterSubmit={(user) => {
-                    selectedUser
-                        ? setUsersDataRaw((prevState) => {
-                              const newState = prevState.slice()
-                              newState[selectedUser.index] = user
-                              return newState
-                          })
-                        : setUsersDataRaw((prevState) => {
-                              const newState = prevState.slice()
-                              newState.unshift(user)
-                              return newState
-                          })
+                afterSubmit={(user, action) => {
+                    switch (action) {
+                        case "delete":
+                            if (selectedUser) {
+                                setUsersDataRaw((prevState) => {
+                                    const newState = prevState.slice()
+                                    newState.splice(selectedUser.index, 1)
+                                    return newState
+                                })
+                            }
+                            break
+                        case "edit":
+                            if (selectedUser) {
+                                setUsersDataRaw((prevState) => {
+                                    const newState = prevState.slice()
+                                    newState[selectedUser.index] = user
+                                    return newState
+                                })
+                            }
+                            break
+                        case "add":
+                            setUsersDataRaw((prevState) => {
+                                const newState = prevState.slice()
+                                newState.unshift(user)
+                                return newState
+                            })
+                            break
+                    }
                     closeDialogAddEdit()
                 }}
                 defaultValues={

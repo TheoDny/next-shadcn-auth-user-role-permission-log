@@ -13,6 +13,7 @@ import { PermissionMedium, PermissionSmall } from "@/type/permission.type"
 import { addLog } from "@/service/log.service"
 import { hash } from "bcryptjs"
 import { sendEmailNewUser, sendEmailPasswordReset } from "@/service/mail.service"
+import { User } from "@prisma/client"
 
 export const getUserFullInfoFromEmailOrId = async (
     emailOrId: string,
@@ -44,6 +45,9 @@ export const getUserFullInfoFromEmailOrId = async (
 export const getAllUserRole = async (): Promise<UserIncludeRoleSmall[]> => {
     return prisma.user.findMany({
         select: selectUserIncludeRoleSmall,
+        where: {
+            deletedAt: null,
+        },
     })
 }
 
@@ -176,4 +180,30 @@ export const getAccountInfo = async (userId: string): Promise<UserInfoFullMedium
     const permissions: PermissionMedium[] = Array.from(permissionsSet)
 
     return { ...userFull, Permissions: permissions }
+}
+
+export const deleteUser = async (userId: string): Promise<User> => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { email: true },
+    })
+
+    if (!user) {
+        throw new Error("User not found")
+    }
+
+    const deletedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            deletedAt: new Date(),
+            email: `deleted_${userId}_${user.email}`,
+        },
+    })
+
+    addLog(
+        "USER_DELETE",
+        `Suppression de l'utilisateur ${deletedUser.lastname.toUpperCase()} ${deletedUser.firstname} (${deletedUser.id})`,
+    )
+
+    return deletedUser
 }

@@ -39,6 +39,10 @@ export const authOptions: AuthOptions = {
                 if (!userInfo.isActive) {
                     throw new Error("Compte désactivé")
                 }
+                if (userInfo.deletedAt) {
+                    throw new Error("Compte supprimé")
+                }
+
                 addLog(
                     "CONNEXION_SUCCESS",
                     `Connexion à l'application de ${userInfo.lastname.toUpperCase()} ${userInfo.firstname}`,
@@ -82,6 +86,9 @@ export const authOptions: AuthOptions = {
             }
             if (!userInfo.isActive) {
                 throw new Error("Compte désactivé")
+            }
+            if (userInfo.deletedAt) {
+                throw new Error("Compte supprimé")
             }
 
             return {

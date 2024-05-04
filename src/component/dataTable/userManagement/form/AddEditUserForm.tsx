@@ -6,12 +6,14 @@ import { Input } from "@/component/ui/input"
 import { ButtonLoading } from "@/component/ui/button-loading"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { addUserAction, editUserAction } from "@/action/user.action"
+import { addUserAction, deleteUserAction, editUserAction } from "@/action/user.action"
 import { UserIncludeRoleSmall } from "@/type/user.type"
 import { addUserZod } from "@/zod/user.zod"
 import { toast } from "sonner"
 import { handleErrorAction } from "@/util/error.util"
 import { Switch } from "@/component/ui/switch"
+import { Button } from "@/component/ui/button"
+import { useConfirm } from "@/provider/ConfirmationProvider"
 
 type props = {
     defaultValues?: {
@@ -21,11 +23,14 @@ type props = {
         email: string
         isActive?: boolean
     }
-    afterSubmit?: (value: UserIncludeRoleSmall) => any
+    afterSubmit?: (value: UserIncludeRoleSmall, action: "edit" | "delete" | "add") => any
+    canDelete?: boolean
 }
 
-const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
+const AddEditUserForm = ({ defaultValues, afterSubmit, canDelete }: props) => {
     const [loading, setLoading] = useState(false)
+
+    const { confirm } = useConfirm()
 
     const form = useForm<z.infer<typeof addUserZod>>({
         resolver: zodResolver(addUserZod),
@@ -36,7 +41,7 @@ const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
         setLoading(true)
         const response = await addUserAction(values)
         if (handleErrorAction(response, toast) && response.data) {
-            afterSubmit && afterSubmit(response.data)
+            afterSubmit && afterSubmit(response.data, "add")
         }
         setLoading(false)
     }
@@ -46,7 +51,25 @@ const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
         setLoading(true)
         const response = await editUserAction({ userId: defaultValues.id, ...values })
         if (handleErrorAction(response, toast) && response.data) {
-            afterSubmit && afterSubmit(response.data)
+            afterSubmit && afterSubmit(response.data, "edit")
+        }
+        setLoading(false)
+    }
+
+    const deleteUser = async () => {
+        if (!defaultValues) return console.error("Aucun userId fourni")
+        setLoading(true)
+        if (
+            await confirm(
+                "Voulez-vous vraiment supprimer cet utilisateur ?",
+                `compte: ${defaultValues.lastname} ${defaultValues.firstname}`,
+            )
+        ) {
+            const response = await deleteUserAction({ userId: defaultValues.id })
+            if (handleErrorAction(response, toast) && response.data) {
+                // @ts-ignore
+                afterSubmit && afterSubmit(response.data, "delete")
+            }
         }
         setLoading(false)
     }
@@ -121,6 +144,16 @@ const AddEditUserForm = ({ defaultValues, afterSubmit }: props) => {
                 >
                     {defaultValues ? "Modifier" : "Ajouter"}
                 </ButtonLoading>
+                {canDelete && defaultValues && !defaultValues.isActive && (
+                    <Button
+                        className="w-full !mt-6"
+                        variant={"destructive"}
+                        type="button"
+                        onClick={deleteUser}
+                    >
+                        Suppression
+                    </Button>
+                )}
             </form>
         </Form>
     )
