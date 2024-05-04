@@ -3,7 +3,8 @@ import { generateToken } from "@/util/auth.util"
 import { addLog } from "@/service/log.service"
 
 import { render } from "@react-email/render"
-import { NewUser } from "../../emails/auth/NewUser"
+import { NewUserMail } from "../../emails/auth/NewUserMail"
+import PasswordResetMail from "../../emails/auth/PasswordResetMail"
 
 export interface EmailOptions {
     to: string[]
@@ -40,7 +41,15 @@ async function sendEmail(options: EmailOptions) {
 
 export async function sendEmailNewUser(email: string, idUser: string) {
     const appName = process.env.NEXT_PUBLIC_APP_NAME || "Mon Application"
-    const html = render(NewUser({ idUser: idUser, appName: appName }))
+    const html = render(
+        NewUserMail({
+            user: {
+                id: idUser,
+                email: email,
+            },
+            appName: appName,
+        }),
+    )
 
     try {
         await sendEmail({
@@ -52,6 +61,33 @@ export async function sendEmailNewUser(email: string, idUser: string) {
         return true
     } catch (e) {
         addLog("MAIL_ERROR", `Erreur lors de l'envoi de l'email de nouvel utilisateur à ${email}`)
+        console.error(e)
+        return false
+    }
+}
+
+export async function sendEmailPasswordReset(email: string, idUser: string) {
+    const appName = process.env.NEXT_PUBLIC_APP_NAME || "Mon Application"
+    const html = render(
+        PasswordResetMail({
+            user: {
+                id: idUser,
+                email: email,
+            },
+            appName: appName,
+        }),
+    )
+
+    try {
+        await sendEmail({
+            to: [email],
+            subject: `${appName} - Demande de réinitialisation de mot de passe`,
+            html: html,
+        })
+        addLog("MAIL_SEND", `Envoi de l'email de réinitialisation de mot de passe à ${email}`)
+        return true
+    } catch (e) {
+        addLog("MAIL_ERROR", `Erreur lors de l'envoi de l'email de réinitialisation de mot de passe à ${email}`)
         console.error(e)
         return false
     }

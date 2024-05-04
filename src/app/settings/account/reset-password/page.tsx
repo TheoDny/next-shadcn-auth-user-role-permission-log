@@ -4,6 +4,8 @@ import ResetPasswordForm from "@/component/account/form/ResetPasswordForm"
 import { BasicCard } from "@/component/card/basicCard"
 import { redirect } from "next/navigation"
 import { verify } from "jsonwebtoken"
+import Image from "next/image"
+import { CardDescription, CardTitle } from "@/component/ui/card"
 
 type Props = {
     params: {}
@@ -19,21 +21,32 @@ export default async function ResetPassword(props: Props) {
     }
 
     try {
-        const decodedToken: { idUser?: string } = verify(
+        const decodedToken: { idUser?: string; email?: string } = verify(
             token,
             process.env.APP_SECRET || "my_ultra_secure_nextauth_secret",
-        ) as { idUser?: string }
+        ) as { idUser?: string; email?: string }
 
-        if (!decodedToken?.idUser) {
+        if (!decodedToken?.idUser && !decodedToken?.email) {
             redirect("/login")
         }
-
-        return (
-            <div className={"space-y-2 lg:w-1/2  md:w-2/3 w-full m-auto"}>
-                <BasicCard title={"Réinitialiser le mot de passe"}>
-                    <ResetPasswordForm token={token} />
-                </BasicCard>
+        const headerCard = (
+            <div className="space-y-4">
+                <div className={"flex justify-center"}>
+                    <Image
+                        src="/logo-full.png"
+                        alt="logo"
+                        width={150}
+                        height={70}
+                    />
+                </div>
+                <CardTitle>Réinitialiser le mot de passe</CardTitle>
+                <CardDescription>Email du compte concerné: {decodedToken.email}</CardDescription>
             </div>
+        )
+        return (
+            <BasicCard header={headerCard}>
+                <ResetPasswordForm token={token} />
+            </BasicCard>
         )
     } catch (e) {
         redirect("/login")

@@ -72,17 +72,9 @@ export const resetPasswordAction = action(
 
 export const sendMailPasswordResetAction = action(
     z.object({
-        userId: z.string().nullable(),
+        email: z.string().email(),
     }),
-    async ({ userId }) => {
-        const session = await getServerSession(authOptions)
-        if (!session?.user || (!checkPermissions(session, ["gestion_role"]) && Boolean(userId))) {
-            throw new Error("Unauthorized")
-        }
-        if (!userId) {
-            userId = session.user.id as string
-        }
-
-        return await sendMailPasswordReset(userId)
+    async ({ email }) => {
+        return await sendMailPasswordReset(email)
     },
 )

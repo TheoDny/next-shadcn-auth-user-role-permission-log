@@ -1,7 +1,8 @@
 "use client"
-import { Card, CardContent, CardHeader } from "@/component/ui/card"
+import { Card, CardContent, CardFooter, CardHeader } from "@/component/ui/card"
 import LoginForm from "@/component/login/LoginForm"
 import Image from "next/image"
+import { ResetPasswordQuestionDialog } from "@/component/login/ResetPasswordQuestionDialog"
 
 const Login = ({ className }: { className?: string }) => {
     return (
@@ -17,6 +18,9 @@ const Login = ({ className }: { className?: string }) => {
             <CardContent>
                 <LoginForm />
             </CardContent>
+            <CardFooter className={"justify-end"}>
+                <ResetPasswordQuestionDialog />
+            </CardFooter>
         </Card>
     )
 }

@@ -12,7 +12,7 @@ import {
 import { PermissionMedium, PermissionSmall } from "@/type/permission.type"
 import { addLog } from "@/service/log.service"
 import { hash } from "bcryptjs"
-import { sendEmailNewUser } from "@/service/mail.service"
+import { sendEmailNewUser, sendEmailPasswordReset } from "@/service/mail.service"
 
 export const getUserFullInfoFromEmailOrId = async (
     emailOrId: string,
@@ -139,17 +139,18 @@ export const resetPassword = async (idUser: string, newPassword: string) => {
     return true
 }
 
-export const sendMailPasswordReset = async (userId: string) => {
+export const sendMailPasswordReset = async (email: string) => {
     const user = await prisma.user.findUnique({
-        where: { id: userId },
+        where: { email: email },
     })
     if (!user) {
-        throw new Error("User not found")
+        throw new Error("User not found with email: " + email)
     }
 
-    const resEmail = await sendEmailNewUser(user.email, user.id)
+    const resEmail = await sendEmailPasswordReset(user.email, user.id)
+
     if (!resEmail) {
-        throw new Error("failed to send email")
+        throw new Error("failed to send email to : " + email)
     }
 
     return resEmail

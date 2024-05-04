@@ -35,7 +35,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                             </ConfirmDialogProvider>
                         </ThemeProvider>
                     ) : (
-                        <main className={"md:ml-52 md:px-3 md:pb-2 md:pt-3 px-1 pb-1 pt-1"}>{children}</main>
+                        <div className={"flex justify-center items-center h-dvh"}>
+                            <main className={"relative "}>{children}</main>
+                        </div>
                     )}
                 </NextAuthProvider>
                 <Toaster />

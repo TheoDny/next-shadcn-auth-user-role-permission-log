@@ -1,15 +1,18 @@
-import { Body, Button, Container, Head, Html, Img, Preview, Section, Text } from "@react-email/components"
+import { Body, Button, Container, Html, Preview, Text } from "@react-email/components"
 import { generateToken } from "@/util/auth.util"
 import { Hr } from "@react-email/hr"
 import { CSSProperties } from "react"
 
 interface NewUserProps {
-    idUser: string
+    user: {
+        id: string
+        email: string
+    }
     appName: string
 }
 
-export const NewUser = ({ idUser, appName }: NewUserProps) => {
-    const token = generateToken({ idUser: idUser }, "24hours")
+export const NewUserMail = ({ user, appName }: NewUserProps) => {
+    const token = generateToken({ idUser: user.id, email: user.email }, "24hours")
     const app_url = process.env.NEXTAUTH_URL || "http://localhost:3000"
 
     return (
@@ -32,6 +35,9 @@ export const NewUser = ({ idUser, appName }: NewUserProps) => {
                         </a>
                     </Button>
                     <Text style={styles.small}>
+                        Vous disposez de 24 heures pour réinitialiser votre mot de passe.Passez ce délai, vous
+                        devrez effectuer une demande de réinitialisation de mot de passe sur la page de connexion.
+                        <br />
                         Si vous n'avez pas demandé la création de ce compte, veuillez ignorer cet email.
                     </Text>
                     <Hr />
@@ -41,8 +47,11 @@ export const NewUser = ({ idUser, appName }: NewUserProps) => {
     )
 }
 
-NewUser.PreviewProps = {
-    idUser: "1",
+NewUserMail.PreviewProps = {
+    user: {
+        id: "1",
+        email: "test@example.com",
+    },
     appName: "Mon Application",
 } as NewUserProps
 
@@ -85,4 +94,4 @@ const styles: { [k: string]: CSSProperties } = {
         fontStyle: "italic",
     },
 }
-export default NewUser
+export default NewUserMail
