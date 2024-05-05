@@ -25,7 +25,7 @@ type props<L, FL, R, FR> = {
     configRight?: ConfigCustomTable
     classNameRight?: DataTableStyle
     onDoubleClickLeft?: (index: number) => any
-    onChangeSelectedRight?: (leftIndex: number, rightIds: string[]) => any
+    onChangeSelectedRight?: (leftIndex: number, rightIds: string[]) => Promise<boolean>
     toolbarRight?: ReactNode
     enableColumnVisibilityRight?: boolean
 }
@@ -86,11 +86,23 @@ export default function DoubleDataTable<
         if (onChangeSelectedRight && isEdited.current) {
             const leftSeletedKeys = Object.keys(leftSelected)
             if (leftSeletedKeys.length > 0) {
-                onChangeSelectedRight(parseInt(leftSeletedKeys[0]), Object.keys(rightSelected))
+                onChangeSelectedRight(parseInt(leftSeletedKeys[0]), Object.keys(rightSelected)).then((success) => {
+                    // if the request failed, we reset the rightSelected by re-selecting the selectedLeft
+                    if (!success) {
+                        setLeftSelected((prev) => {
+                            return { ...prev }
+                        })
+                    }
+                })
             }
+
             isEdited.current = false
         }
     }, [rightSelected, leftSelected, onChangeSelectedRight])
+
+    useEffect(() => {
+        console.log(leftSelected)
+    }, [leftSelected])
 
     const formateDataLeft: FL[] = useMemo(() => formatLeft(dataLeft), [dataLeft, formatLeft])
     const formatedDataRight: FR[] = useMemo(() => formatRight(dataRight), [dataRight, formatRight])
